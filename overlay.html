@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LiiL External Dynamic Island</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-user-select:none}
+html,body{
+  width:100%;height:100%;
+  overflow:hidden;
+  background:transparent;
+  font: 500 12px/1.2 "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color:#fff;
+}
+
+:root {
+  --object: #2c2c2c;
+  --ln: rgba(255, 255, 255, 0.11);
+  --fill-1: rgba(255, 255, 255, 0.05);
+  --fill-2: rgba(255, 255, 255, 0.1);
+  --green: #2fe08a;
+  --on-green: #04140a;
+  --text: #ffffff;
+  --muted: rgba(255, 255, 255, 0.55);
+  --spring-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --spring: cubic-bezier(.34, 1.56, .64, 1);
+}
+
+.island-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 8px; /* In-app islandning top: 8px koordinatasiga to'liq mos keladi */
+}
+
+/* Dynamic Island Capsule */
+.island {
+  position: relative;
+  background: var(--object);
+  border: 1px solid var(--ln);
+  box-shadow: none;
+  overflow: hidden;
+  cursor: pointer;
+  will-change: width, height, border-radius, transform;
+  transition: width .35s var(--spring-ease), height .35s var(--spring-ease), border-radius .35s var(--spring-ease), transform .18s ease, border-color .25s ease, box-shadow .25s ease;
+}
+
+.island:hover {
+  transform: scale(1.015);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+.island:active {
+  transform: scale(0.985);
+}
+
+/* Dragging & Dock Glow States */
+.island.shift-ready {
+  cursor: grab !important;
+}
+
+.island.is-dragging {
+  cursor: grabbing !important;
+  transform: scale(1.01) !important;
+  box-shadow: none !important;
+  border-color: var(--ln) !important;
+  transition: none !important;
+}
+
+/* Snap to Top Glow Effect */
+.island.dock-glow {
+  border-color: #2fe08a !important;
+  box-shadow: 
+    0 0 0 1.5px rgba(47, 224, 138, 0.95),
+    0 0 22px rgba(47, 224, 138, 0.85),
+    0 0 45px rgba(47, 224, 138, 0.5),
+    inset 0 0 12px rgba(47, 224, 138, 0.35) !important;
+  animation: dock-snap-glow 1.2s ease-in-out infinite alternate !important;
+}
+
+@keyframes dock-snap-glow {
+  0% {
+    box-shadow: 
+      0 0 0 1px rgba(47, 224, 138, 0.7),
+      0 0 16px rgba(47, 224, 138, 0.65),
+      0 0 32px rgba(47, 224, 138, 0.35),
+      inset 0 0 8px rgba(47, 224, 138, 0.25);
+  }
+  100% {
+    box-shadow: 
+      0 0 0 2px rgba(47, 224, 138, 1),
+      0 0 28px rgba(47, 224, 138, 0.95),
+      0 0 54px rgba(47, 224, 138, 0.55),
+      inset 0 0 18px rgba(47, 224, 138, 0.45);
+  }
+}
+
+/* Docked in Place Animation (Joyida qotsin) */
+.island.is-docked {
+  animation: dock-lock 1s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+@keyframes dock-lock {
+  0% {
+    border-color: #2fe08a;
+    box-shadow: 
+      0 0 0 1.5px rgba(47, 224, 138, 1),
+      0 0 26px rgba(47, 224, 138, 0.9),
+      0 0 50px rgba(47, 224, 138, 0.5),
+      inset 0 0 14px rgba(47, 224, 138, 0.4);
+    transform: scale(1.02);
+  }
+  50% {
+    border-color: rgba(47, 224, 138, 0.75);
+    box-shadow: 
+      0 0 0 1px rgba(47, 224, 138, 0.6),
+      0 0 18px rgba(47, 224, 138, 0.45),
+      0 0 30px rgba(47, 224, 138, 0.25),
+      inset 0 0 8px rgba(47, 224, 138, 0.2);
+    transform: scale(1.0);
+  }
+  100% {
+    border-color: var(--ln);
+    box-shadow: none;
+    transform: scale(1);
+  }
+}
+
+.island.is-idle {
+  width: 154px;
+  height: 36px;
+  border-radius: 18px;
+}
+.island.is-music {
+  width: 324px;
+  height: 42px;
+  border-radius: 21px;
+}
+.island.is-hub {
+  width: 348px;
+  height: 134px;
+  border-radius: 26px;
+}
+
+.island .ic {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  filter: blur(6px);
+  transform: translate(-50%, -50%) scale(0.92);
+  transition: opacity .18s ease, filter .18s ease, transform .22s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.island .ic.on {
+  opacity: 1;
+  filter: none;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+  transition: opacity .32s ease .06s, filter .32s ease .06s, transform .45s var(--spring-ease) .06s;
+}
+
+/* Idle Mode */
+.isl-idle {
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+.isl-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 12px var(--green); }
+}
+
+/* Music Compact Mode */
+.isl-music {
+  width: 316px;
+  gap: 10px;
+  padding: 0 6px;
+}
+.isl-mcov {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  flex: none;
+  display: block;
+}
+.isl-mtx {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+}
+.isl-mtx b {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.15;
+}
+.isl-mtx span {
+  display: block;
+  font-size: 10.5px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.15;
+  transition: color .25s;
+}
+.isl-mtx span.has-live-lyr {
+  color: var(--green);
+  font-weight: 300;
+}
+.isl-mtx span .ch {
+  display: inline-block;
+  white-space: pre;
+  will-change: font-weight, opacity;
+}
+.isl-mbtn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 0;
+  padding: 0;
+  background: var(--fill-2);
+  color: var(--text);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  flex: none;
+  transition: transform .2s var(--spring), background .2s, color .2s;
+}
+.isl-mbtn:hover {
+  background: #ffffff;
+  color: #000000;
+  transform: scale(1.08);
+}
+.isl-mbtn:active {
+  transform: scale(0.92);
+}
+.isl-mbtn svg {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+}
+
+/* Hub Expanded Mode - Ixcham va ortiqcha bo'sh joylarsiz */
+.isl-hub {
+  width: 348px;
+  height: 134px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  padding: 10px 12px;
+  white-space: normal;
+  box-sizing: border-box;
+}
+.hub-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  height: 100%;
+}
+.hub-box {
+  background: var(--fill-1);
+  border-radius: 14px;
+  padding: 9px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+  min-width: 0;
+}
+.hub-tag {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.hub-main {
+  min-width: 0;
+}
+.hub-main b {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hub-main span {
+  display: block;
+  font-size: 10.5px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+.hub-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.hub-pill {
+  border: 0;
+  border-radius: 999px;
+  height: 24px;
+  padding: 0 8px;
+  font-size: 10.5px;
+  font-weight: 600;
+  background: var(--fill-2);
+  color: var(--text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: background .2s, transform .15s, color .2s;
+}
+.hub-pill:hover {
+  background: #ffffff;
+  color: #000000;
+  transform: scale(1.04);
+}
+.hub-pill:active {
+  transform: scale(0.94);
+}
+.hub-pill.go {
+  background: var(--green);
+  color: var(--on-green);
+  font-weight: 700;
+}
+.hub-pill.go:hover {
+  background: #4ef0a3;
+  color: #04140a;
+}
+
+/* Mesh Cover Gradients identical to LiiL app */
+[data-av]{
+  background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+    radial-gradient(70% 70% at var(--p1),var(--av-l) 0,transparent 70%),
+    radial-gradient(60% 60% at var(--p2),var(--av-p) 0,transparent 70%),
+    radial-gradient(75% 75% at var(--p3),var(--av-b) 0,transparent 72%),
+    var(--av-a) !important;
+  background-blend-mode:overlay,normal,normal,normal,normal !important;
+}
+[data-av="1"]{--av-l:#ff8fd0;--av-a:#ff3fa6;--av-b:#6a35ff;--av-p:#ffd3ec;--p1:12% 10%;--p2:92% 8%;--p3:88% 96%}
+[data-av="2"]{--av-l:#7fe3ff;--av-a:#2b8cff;--av-b:#5a35ff;--av-p:#cdf3ff;--p1:102% 65%;--p2:34% 107%;--p3:-6% 29%}
+[data-av="3"]{--av-l:#d6ff5a;--av-a:#22d39a;--av-b:#0a8a8f;--av-p:#efffb0;--p1:65% -3%;--p2:107% 65%;--p3:29% 106%}
+[data-av="4"]{--av-l:#ffb866;--av-a:#ff4a5e;--av-b:#c31f86;--av-p:#ffe0b8;--p1:34% 103%;--p2:-7% 34%;--p3:71% -6%}
+[data-av="5"]{--av-l:#fff27a;--av-a:#ffa51f;--av-b:#ff4a2e;--av-p:#fff3bf;--p1:-4% 63%;--p2:34% -7%;--p3:109% 40%}
+[data-av="6"]{--av-l:#7dffea;--av-a:#1fa8ff;--av-b:#3a3cff;--av-p:#c9fff5;--p1:90% 12%;--p2:92% 92%;--p3:4% 88%}
+[data-av="7"]{--av-l:#ffd3f1;--av-a:#c07bff;--av-b:#ff4f9a;--av-p:#f0dcff;--p1:63% 104%;--p2:-7% 65%;--p3:40% -9%}
+[data-av="8"]{--av-l:#c2ffd6;--av-a:#2fe08a;--av-b:#0a9a6a;--av-p:#e2ffec;--p1:37% -4%;--p2:107% 34%;--p3:60% 109%}
+</style>
+</head>
+<body>
+<div class="island-wrap" id="islandWrap">
+  <div class="island is-idle" id="morphIsland" role="button" tabindex="0" title="LiiL Dynamic Island (Shift + Chap tugma bilan surish mumkin)">
+    <!-- IDLE -->
+    <div class="ic isl-idle on" id="icIdle">
+      <span class="isl-pulse"></span>
+      <span id="islIdleTxt">LiiL Tayyor</span>
+    </div>
+
+    <!-- MUSIC (Compact) -->
+    <div class="ic isl-music" id="icMusic">
+      <i class="isl-mcov" id="islMcov" data-av="1"></i>
+      <div class="isl-mtx">
+        <b id="islMtitle">LiiL Music</b>
+        <span id="islMart">Musics papkasi</span>
+      </div>
+      <button class="isl-mbtn" id="islPlayBtn" type="button" aria-label="Play/Pause">
+        <svg viewBox="0 0 24 24" id="islPlaySvg"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button class="isl-mbtn" id="islNextBtn" type="button" aria-label="Keyingi">
+        <svg viewBox="0 0 24 24"><path d="M5 5v14l10-7zm12 0v14h2V5z"/></svg>
+      </button>
+    </div>
+
+    <!-- HUB (Expanded) -->
+    <div class="ic isl-hub" id="icHub">
+      <div class="hub-grid">
+        <!-- Music Card -->
+        <div class="hub-box">
+          <div class="hub-tag"><span>LiiL Music</span><span id="hubBpm">CALM</span></div>
+          <div class="hub-main">
+            <b id="hubMtitle">Tanlanmagan</b>
+            <span id="hubMart">Musics papkasi</span>
+          </div>
+          <div class="hub-actions">
+            <button class="hub-pill" id="hubPlayBtn" type="button">Ijro</button>
+            <button class="hub-pill" id="hubNextBtn" type="button">Keyingi</button>
+          </div>
+        </div>
+        <!-- LiiLHisob Card -->
+        <div class="hub-box">
+          <div class="hub-tag"><span>LiiLHisob</span><span id="hubTcnt">0</span></div>
+          <div class="hub-main">
+            <b id="hubTtitle">Hisob joyida</b>
+            <span id="hubTcat">Moliya & Rejalar</span>
+          </div>
+          <div class="hub-actions">
+            <button class="hub-pill go" id="hubCheckBtn" type="button">✓ Bajarish</button>
+            <button class="hub-pill" id="hubOpenBtn" type="button">Ochish</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const island = document.getElementById('morphIsland');
+  const icIdle = document.getElementById('icIdle');
+  const icMusic = document.getElementById('icMusic');
+  const icHub = document.getElementById('icHub');
+
+  // Music elements
+  const islMcov = document.getElementById('islMcov');
+  const islMtitle = document.getElementById('islMtitle');
+  const islMart = document.getElementById('islMart');
+  const islPlayBtn = document.getElementById('islPlayBtn');
+  const islNextBtn = document.getElementById('islNextBtn');
+  const islPlaySvg = document.getElementById('islPlaySvg');
+
+  // Hub elements
+  const hubBpm = document.getElementById('hubBpm');
+  const hubMtitle = document.getElementById('hubMtitle');
+  const hubMart = document.getElementById('hubMart');
+  const hubPlayBtn = document.getElementById('hubPlayBtn');
+  const hubNextBtn = document.getElementById('hubNextBtn');
+  const hubTcnt = document.getElementById('hubTcnt');
+  const hubTtitle = document.getElementById('hubTtitle');
+  const hubTcat = document.getElementById('hubTcat');
+  const hubCheckBtn = document.getElementById('hubCheckBtn');
+  const hubOpenBtn = document.getElementById('hubOpenBtn');
+
+  const PLAY_PATH = 'M8 5v14l11-7z';
+  const PAUSE_PATH = 'M6 19h4V5H6v14zm8-14v14h4V5h-4z';
+
+  let currentMode = 'idle'; // 'idle' | 'music' | 'hub'
+  let hasTrack = false;
+  let isPlaying = false;
+  let collapseTimeout = null;
+
+  // Kinetic Lyrics Animation State
+  let islChars = [];
+  let focusCurrent = 0;
+  let focusTarget = 0;
+
+  function setMode(mode) {
+    currentMode = mode;
+    island.classList.remove('is-idle', 'is-music', 'is-hub');
+    icIdle.classList.remove('on');
+    icMusic.classList.remove('on');
+    icHub.classList.remove('on');
+
+    if (mode === 'hub') {
+      island.classList.add('is-hub');
+      icHub.classList.add('on');
+      resetCollapseTimer();
+    } else if (mode === 'music' && hasTrack) {
+      island.classList.add('is-music');
+      icMusic.classList.add('on');
+      clearCollapseTimer();
+    } else {
+      currentMode = 'idle';
+      island.classList.add('is-idle');
+      icIdle.classList.add('on');
+      clearCollapseTimer();
+    }
+  }
+
+  function clearCollapseTimer() {
+    if (collapseTimeout) {
+      clearTimeout(collapseTimeout);
+      collapseTimeout = null;
+    }
+  }
+
+  function resetCollapseTimer() {
+    clearCollapseTimer();
+    collapseTimeout = setTimeout(() => {
+      if (currentMode === 'hub') {
+        setMode(hasTrack ? 'music' : 'idle');
+      }
+    }, 10000);
+  }
+
+  // Sudrash (Drag) o'zgaruvchilari: Shift + Hold Left Mouse Button
+  let isDragging = false;
+  let didDrag = false;
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let rafMoveId = null;
+
+  island.addEventListener('pointerdown', (e) => {
+    // Faqat Sichqonchaning chap tugmasi (button === 0) va Shift bosilganda sudrash
+    if (e.button === 0 && e.shiftKey) {
+      e.preventDefault();
+      e.stopPropagation();
+      isDragging = true;
+      didDrag = false;
+      dragStartX = e.screenX;
+      dragStartY = e.screenY;
+
+      try {
+        island.setPointerCapture(e.pointerId);
+      } catch (err) {}
+
+      island.classList.remove('dock-glow', 'is-docked');
+      island.classList.add('is-dragging');
+      window.externalIsland?.setIgnoreMouseEvents(false);
+      window.externalIsland?.startDrag();
+    }
+  });
+
+  island.addEventListener('pointermove', (e) => {
+    if (!isDragging) {
+      if (e.shiftKey) {
+        island.classList.add('shift-ready');
+      } else {
+        island.classList.remove('shift-ready');
+      }
+      return;
+    }
+
+    const dist = Math.hypot(e.screenX - dragStartX, e.screenY - dragStartY);
+    if (dist > 4) {
+      didDrag = true;
+    }
+
+    if (didDrag) {
+      if (!rafMoveId) {
+        rafMoveId = requestAnimationFrame(() => {
+          rafMoveId = null;
+          if (isDragging) {
+            window.externalIsland?.moveDrag();
+          }
+        });
+      }
+    }
+  });
+
+  const endDragHandler = (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    if (rafMoveId) {
+      cancelAnimationFrame(rafMoveId);
+      rafMoveId = null;
+    }
+    island.classList.remove('is-dragging');
+
+    try {
+      if (e && e.pointerId) island.releasePointerCapture(e.pointerId);
+    } catch (err) {}
+
+    window.externalIsland?.endDrag();
+
+    const rect = island.getBoundingClientRect();
+    const inside = (
+      e &&
+      e.clientX >= rect.left &&
+      e.clientX <= rect.right &&
+      e.clientY >= rect.top &&
+      e.clientY <= rect.bottom
+    );
+    if (!inside) {
+      window.externalIsland?.setIgnoreMouseEvents(true, { forward: true });
+    }
+
+    setTimeout(() => {
+      didDrag = false;
+    }, 120);
+  };
+
+  island.addEventListener('pointerup', endDragHandler);
+  island.addEventListener('pointercancel', endDragHandler);
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Shift') {
+      island.classList.add('shift-ready');
+    }
+  });
+
+  window.addEventListener('keyup', (e) => {
+    if (e.key === 'Shift') {
+      island.classList.remove('shift-ready');
+    }
+  });
+
+  // Snap va Dock holatlarini qabul qilish (Glow effect va joyida qotish)
+  if (window.externalIsland?.onSnapState) {
+    window.externalIsland.onSnapState(({ snapped }) => {
+      if (snapped) {
+        island.classList.add('dock-glow');
+        island.classList.remove('is-docked');
+      } else {
+        island.classList.remove('dock-glow');
+      }
+    });
+  }
+
+  if (window.externalIsland?.onDocked) {
+    window.externalIsland.onDocked(({ docked }) => {
+      island.classList.remove('dock-glow');
+      if (docked) {
+        island.classList.add('is-docked');
+        setTimeout(() => {
+          island.classList.remove('is-docked');
+        }, 1100);
+      }
+    });
+  }
+
+  // Toggle Hub on island capsule click (ignore button clicks va sudrash)
+  island.addEventListener('click', (e) => {
+    if (e.shiftKey || didDrag) {
+      e.stopPropagation();
+      return;
+    }
+    if (e.target.closest('button')) return;
+    if (currentMode === 'hub') {
+      setMode(hasTrack ? 'music' : 'idle');
+    } else {
+      setMode('hub');
+    }
+  });
+
+  // Compact buttons
+  islPlayBtn.addEventListener('click', (e) => {
+    if (e.shiftKey || didDrag) return;
+    e.stopPropagation();
+    window.externalIsland?.sendAction('toggle-play');
+  });
+
+  islNextBtn.addEventListener('click', (e) => {
+    if (e.shiftKey || didDrag) return;
+    e.stopPropagation();
+    window.externalIsland?.sendAction('next');
+  });
+
+  // Hub buttons
+  hubPlayBtn.addEventListener('click', (e) => {
+    if (e.shiftKey || didDrag) return;
+    e.stopPropagation();
+    window.externalIsland?.sendAction('toggle-play');
+  });
+
+  hubNextBtn.addEventListener('click', (e) => {
+    if (e.shiftKey || didDrag) return;
+    e.stopPropagation();
+    window.externalIsland?.sendAction('next');
+  });
+
+  hubCheckBtn.addEventListener('click', (e) => {
+    if (e.shiftKey || didDrag) return;
+    e.stopPropagation();
+    window.externalIsland?.sendAction('complete-todo');
+  });
+
+  hubOpenBtn.addEventListener('click', (e) => {
+    if (e.shiftKey || didDrag) return;
+    e.stopPropagation();
+    window.externalIsland?.restoreApp();
+  });
+
+  // Ignore mouse events outside capsule
+  if (window.externalIsland?.setIgnoreMouseEvents) {
+    island.addEventListener('mouseenter', () => {
+      window.externalIsland.setIgnoreMouseEvents(false);
+      clearCollapseTimer();
+    });
+    island.addEventListener('mouseleave', () => {
+      if (isDragging) return; // Sudrayotganda sichqoncha hodisalarini yo'qotmaslik
+      island.classList.remove('shift-ready');
+      window.externalIsland.setIgnoreMouseEvents(true, { forward: true });
+      if (currentMode === 'hub') resetCollapseTimer();
+    });
+    window.externalIsland.setIgnoreMouseEvents(true, { forward: true });
+  }
+
+  // Kinetic Typography Animation Loop (60fps variable-weight wave)
+  function animLoop() {
+    requestAnimationFrame(animLoop);
+    if (!islChars.length || currentMode === 'hub') return;
+
+    // Smoothly follow target focus
+    focusCurrent += (focusTarget - focusCurrent) * 0.22;
+    const LIGHT = 300, BOLD = 760, SPREAD = 0.16;
+    const fx = focusCurrent;
+
+    islChars.forEach(c => {
+      const d = (c.prog - fx) / SPREAD;
+      const g = Math.exp(-d * d);
+      const targetW = LIGHT + (BOLD - LIGHT) * g;
+      c.w += (targetW - c.w) * 0.28;
+      const wv = Math.round(Math.min(760, Math.max(300, c.w)) / 10) * 10;
+      if (wv !== c.lw) {
+        c.lw = wv;
+        c.el.style.fontWeight = wv;
+      }
+      const isPast = c.prog < fx - SPREAD * 0.4;
+      const targetOp = isPast ? Math.max(0.85, 0.45 + 0.55 * g) : (0.45 + 0.55 * g);
+      const op = Math.min(1.0, Math.max(0.45, targetOp)).toFixed(2);
+      if (op !== c.lop) {
+        c.lop = op;
+        c.el.style.opacity = op;
+      }
+    });
+  }
+  requestAnimationFrame(animLoop);
+
+  // Live state sync from main app
+  if (window.externalIsland?.onSync) {
+    window.externalIsland.onSync((state) => {
+      if (!state) return;
+      hasTrack = !!state.hasTrack;
+      isPlaying = !!state.isPlaying;
+
+      if (state.lyricFocus !== undefined) {
+        focusTarget = Number(state.lyricFocus) || 0;
+      }
+
+      // Update compact player
+      if (hasTrack) {
+        islMtitle.textContent = state.title || 'LiiL Music';
+
+        if (state.lyric) {
+          if (islMart.dataset.lyr !== state.lyric) {
+            islMart.dataset.lyr = state.lyric;
+            islMart.innerHTML = [...state.lyric].map(ch => `<span class="ch" aria-hidden="true">${ch === ' ' ? '&nbsp;' : ch}</span>`).join('');
+            const chEls = [...islMart.querySelectorAll('.ch')];
+            const n = chEls.length;
+            islChars = chEls.map((el, k) => {
+              el.style.fontWeight = '300';
+              el.style.opacity = '0.45';
+              return {
+                el,
+                prog: n > 1 ? k / (n - 1) : 0.5,
+                w: 300,
+                lw: 300,
+                lop: '0.45'
+              };
+            });
+            islMart.classList.add('has-live-lyr');
+          }
+        } else {
+          if (islMart.dataset.lyr || islChars.length) {
+            delete islMart.dataset.lyr;
+            islChars = [];
+          }
+          islMart.textContent = state.artist || 'Musics papkasi';
+          islMart.classList.remove('has-live-lyr');
+        }
+
+        islMcov.dataset.av = state.av || '1';
+        islPlaySvg.innerHTML = `<path d="${isPlaying ? PAUSE_PATH : PLAY_PATH}"/>`;
+      } else {
+        islMtitle.textContent = 'LiiL Music';
+        islMart.textContent = 'Musics papkasi';
+        islMart.classList.remove('has-live-lyr');
+        islChars = [];
+        islPlaySvg.innerHTML = `<path d="${PLAY_PATH}"/>`;
+      }
+
+      // Update Hub cards
+      hubBpm.textContent = state.bpmTag || 'CALM';
+      hubMtitle.textContent = state.title || 'Tanlanmagan';
+      hubMart.textContent = state.lyric || (state.artist || 'Musics papkasi');
+      hubPlayBtn.textContent = isPlaying ? 'Pauza' : 'Ijro';
+
+      hubTcnt.textContent = state.todoCount !== undefined ? state.todoCount : '0';
+      hubTtitle.textContent = state.todoTitle || 'Hammasi bajarildi';
+      hubTcat.textContent = state.todoCat || 'Vazifalar';
+
+      // Keep current mode or sync to active track
+      if (currentMode !== 'hub') {
+        setMode(hasTrack ? 'music' : 'idle');
+      }
+    });
+  }
+})();
+</script>
+</body>
+</html>

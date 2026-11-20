@@ -1,0 +1,26 @@
+{
+  "name": "liil",
+  "productName": "LiiL",
+  "version": "1.0.0",
+  "description": "LiiL Desktop Application",
+  "main": "main.js",
+  "scripts": {
+    "start": "node start.js",
+    "dev": "node start.js",
+    "tg-login": "node telegram-login.js"
+  },
+  "keywords": [
+    "liil",
+    "desktop",
+    "glassmorphism",
+    "tasks"
+  ],
+  "author": "LiiL",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^45.1.0"
+  },
+  "dependencies": {
+    "telegram": "^2.26.22"
+  }
+}

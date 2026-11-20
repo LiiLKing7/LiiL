@@ -1,0 +1,1270 @@
+<USER_REQUEST>
+elementlar kattarok bo'lsin
+lyrics so'zlari ham kattarok bo'lsin
+bitta ko'rishda max 4ta katorni ko'ra olay
+
+___________
+
+playlistlar:
+
+music playerda chap tomonda yaratilgan music playlistlar ko'rinsin
+ko'rinishi:
+<!-- Expand Card, by DesignBookmark (https://designbookmark.com/motion#db-expand-card). One file: open it in a browser. -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Expand Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Motion Studies design tokens.
+   Single source of truth for color, type, radius and motion.
+   Edit here (or in Claude Design) and every component follows. */
+:root{
+  /* ---------- color ---------- */
+  --stage:#000;                         /* page background */
+  --card:#171717;                       /* component stage card (= white 9% on black) */
+  --surface:#262626;                    /* component body */
+  --fill-1:rgba(255,255,255,.05);       /* tiles, fields */
+  --fill-2:rgba(255,255,255,.09);       /* chips, badges */
+  --fill-3:rgba(255,255,255,.14);       /* tracks, avatars, bars */
+  --line:rgba(255,255,255,.12);
+  --text:#fff;
+  --text-2:rgba(255,255,255,.78);
+  --muted:#9a9a9a;
+  --muted-2:#828282;
+  --chip-text:#b4b4b4;
+  --white:#fff;
+  --black:#000;
+  --green:#34d17a;
+  --green-text:#3ce085;
+  --orange:#ff9f0a;
+  --orange-text:#ff9f0a;                /* orange used as text: darker in light */
+  --red:#ff5a5f;
+  --yellow:#ffd23f;
+  --blue:#3ec9ff;
+  --purple:#c69bff;
+  --pink:#ff6ad5;
+  --heart:#ff4d6d;                      /* like, favourite */
+  --green-soft:rgba(52,209,122,.14);    /* tinted chip behind green text */
+  --on-green:#04140a;                   /* text and checks on --green, same in both themes */
+  --object:#2c2c2c;                     /* a free-standing grey object with no card under it: island, goo bubbles */
+  --inverse:#fff;                       /* primary pills, thumbs, drops */
+  --on-inverse:#000;                    /* content on top of --inverse */
+  --rim:transparent;          /* no strokes anywhere (Noah, 9 Nov 2026) */ /* 1px inner edge on surfaces */
+  --focus-rim:transparent;
+  --glow:rgba(255,255,255,.16);         /* cursor light on tiles */
+  --sh:0;                               /* drop shadow strength multiplier; 0 = no shadows anywhere (Noah, 9 Nov 2026) */
+  color-scheme:dark;
+
+  /* ---------- type ---------- */
+  --font:Inter,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  --fs-2xs:11px;
+  --fs-xs:12px;
+  --fs-sm:13px;
+  --fs-md:14px;
+  --fs-base:15px;
+  --fs-lg:16px;
+  --fs-xl:17px;
+  --fw-regular:400;
+  --fw-medium:500;
+  --fw-bold:600;
+
+  /* ---------- radius ---------- */
+  --r-card:28px;
+  --r-tile:14px;
+  --r-bar:5px;
+  --r-pill:999px;
+  /* inner radius = outer radius - the padding between them. Usual steps: */
+  --r-xs:6px;                           /* keys, tiny chips */
+  --r-row:12px;                         /* rows, icon buttons, highlights inside a panel */
+  --r-panel:18px;                       /* bars, menus, small panels */
+  --r-sheet:24px;                       /* large panels */
+
+  /* ---------- motion: springs are "stiffness damping" ---------- */
+  /* Shared presets. A new component starts from these and only adds its own token when it truly needs a different feel. */
+  --spring-follow:900 50;      /* something held by the pointer: no overshoot, no lag */
+  --spring-settle:280 22;      /* letting go, landing on a value: one small overshoot */
+  --spring-soft:260 24;        /* large moves: panels, sheets, the whole component shifting */
+  --spring-lead:620 36;        /* stretchy highlight: the edge facing the move */
+  --spring-trail:190 19;       /* stretchy highlight: the edge that lags, this makes the stretch */
+  --spring-pop:520 16;         /* icon or number pop on select */
+  --spring-fade:420 32;        /* opacity and small slides */
+  --stagger:45;                /* ms between items entering one after another */
+  /* Rubber Dock */
+  --dock-lead:640 38;          /* edge of the pill that leads the move */
+  --dock-trail:150 16;         /* edge that lags behind: lower = more stretch */
+  --dock-drag-lead:1100 56;
+  --dock-drag-trail:320 26;
+  --dock-open-w:340 21;        /* dock -> card, width */
+  --dock-open-h:230 21;        /* dock -> card, height */
+  --dock-close:420 30;
+  --dock-pop:520 16;           /* icon pop on select */
+  --dock-expanded-w:340;       /* px */
+
+  /* Goo Menu */
+  --goo-out:230 15;            /* bubbles flying out */
+  --goo-in:520 34;             /* bubbles returning */
+  --goo-release:300 12;        /* snap back after a drag */
+  --goo-toast:260 17;          /* + morphing into the toast pill */
+  --goo-radius:112;            /* px, distance of bubbles from + */
+  --goo-stagger:45;            /* ms between bubbles */
+  --goo-toast-ms:2600;         /* how long the toast stays */
+  --goo-blur:10;               /* goo strength: higher = bubbles fuse from further away */
+
+  /* Morph Island */
+  --island-w:380 24;           /* width morph */
+  --island-h:300 22;           /* height morph, a bit softer so it lands after the width */
+  --island-radius:32;          /* px, max corner radius when tall */
+  --island-cycle-ms:2800;      /* autoplay step until the viewer interacts */
+
+  /* Hold Button */
+  --hold-ms:1200;              /* how long to hold */
+  --hold-release:260 14;       /* fill springing back when let go early */
+  --hold-morph:320 20;         /* pill <-> circle */
+  --hold-done-ms:1700;         /* how long the done state stays */
+
+  /* Jelly Slider */
+  --slider-follow:900 50;      /* thumb following the pointer */
+  --slider-bubble:420 22;      /* value bubble rising out of the thumb */
+  --slider-release:300 14;     /* snap back after over-drag */
+  --slider-blur:8;             /* goo strength between thumb and bubble */
+
+  /* Swipe Deck */
+  --deck-drag:900 50;          /* top card following the pointer */
+  --deck-return:280 16;        /* snapping back when not thrown far enough */
+  --deck-threshold:110;        /* px of drag that counts as a decision */
+
+  /* Springy Input */
+  --input-caret:700 32;        /* caret travel; it stretches with speed */
+  --input-morph:300 20;        /* field <-> success pill */
+
+  /* Pull to Refresh */
+  --pull-threshold:88;         /* px of pull that triggers a refresh */
+  --pull-return:260 18;        /* list springing back */
+  --pull-hold-ms:1300;         /* how long the spinner runs */
+
+  /* Magnetic Tiles */
+  --tile-pull:12;              /* px a tile moves toward the cursor */
+  --tile-tilt:12;              /* deg of 3D tilt */
+  --tile-open:300 24;          /* tile -> card morph */
+
+  /* Glass Lens */
+  --lens-follow:180 17;        /* lens chasing the cursor, a little lazy like a drop of water */
+  --lens-zoom:1.7;             /* magnification at rest */
+  --lens-zoom-press:2.4;       /* magnification while pressed */
+  --lens-size:150;             /* px */
+
+  /* Morph Select */
+  --select-open:360 24;        /* trigger <-> menu */
+  --select-hl:620 34;          /* highlight pill edges (leading edge) */
+  --select-reorder:260 21;     /* rows sliding to their new place */
+
+  /* Parallax Ticket */
+  --ticket-tilt:14;            /* deg */
+  --ticket-depth:12;           /* px of parallax for the front layer */
+  --ticket-flip:170 15;        /* flip spring, a little overshoot */
+
+  /* Wheel Picker */
+  --wheel-snap:240 24;         /* settling on the nearest value */
+  --wheel-decay:5;             /* momentum decay per second: lower = spins longer */
+
+  /* Trends */
+  --trend-menu:330 25;         /* "..." button growing into the menu */
+  --trend-fly:260 20;          /* the three dots flying into the menu icons */
+  --trend-row:300 28;          /* row height: dismiss, undo, show more */
+  --trend-live-ms:2200;        /* how often a post count rolls */
+  --trend-tick-ms:1100;        /* how often the charts get a new point */
+  --trend-expand:280 24;       /* row opening into the big chart */
+  --trend-rank:260 22;         /* rows swapping places when the ranking changes */
+
+  /* Side Nav */
+  --nav-lead:560 34;           /* hover pill: edge moving toward the new item */
+  --nav-trail:220 21;          /* hover pill: edge catching up, this makes it stretch */
+
+  /* Rolling Counter */
+  --count-roll:320 24;         /* each digit column rolling to its value: lower damping = more bounce */
+  --count-width:380 22;        /* columns growing in and folding away, this stretches the pill */
+  --count-press:600 18;        /* button squash, number pop and lean */
+  --count-stagger:45;          /* ms each higher column waits, so a carry ripples left */
+  --count-blur:1;              /* motion blur strength, 0 = off */
+  --count-decay:3.5;           /* fling decay per second: lower = coasts longer */
+  --count-snap:260 24;         /* ruler settling on the nearest tick */
+  --count-gap:14;              /* ruler: px between ticks */
+  --count-fisheye:60;          /* ruler: how much ticks swell near the marker, 0..100 */
+  --count-flip:140;            /* split flap: ms per fold */
+}
+
+/* ---------- light mode ---------- */
+:root[data-theme="light"]{
+  --stage:#fff;
+  --card:#f7f7f6;
+  --surface:#fff;
+  --fill-1:rgba(23,24,26,.04);
+  --fill-2:rgba(23,24,26,.07);
+  --fill-3:rgba(23,24,26,.12);
+  --line:rgba(23,24,26,.16);
+  --text:#17181a;
+  --text-2:#3c3b37;
+  --muted:#6f6e68;
+  --muted-2:#85847e;
+  --chip-text:#5c5b56;
+  --green-text:#15803d;
+  --orange-text:#c2660a;
+  --object:#e6e5e2;
+  --inverse:#0e0f11;
+  --on-inverse:#f4f3f1;
+  --rim:transparent;
+  --focus-rim:transparent;
+  --glow:rgba(23,24,26,.06);
+  --sh:0;
+  color-scheme:light;
+}
+
+/* ---------- both themes at once ----------
+   For a component that shows the dark and the light look side by side (Pull cord:
+   the light floods out of the bulb). Same values as the two blocks above, colour only. */
+.theme-dark{
+  --card:#171717;--surface:#262626;--object:#2c2c2c;
+  --fill-1:rgba(255,255,255,.05);--fill-2:rgba(255,255,255,.09);--fill-3:rgba(255,255,255,.14);
+  --text:#fff;--text-2:rgba(255,255,255,.78);--muted:#9a9a9a;--muted-2:#828282;
+  --inverse:#fff;--on-inverse:#000;color-scheme:dark;
+}
+.theme-light{
+  --card:#f7f7f6;--surface:#fff;--object:#e6e5e2;
+  --fill-1:rgba(23,24,26,.04);--fill-2:rgba(23,24,26,.07);--fill-3:rgba(23,24,26,.12);
+  --text:#17181a;--text-2:#3c3b37;--muted:#6f6e68;--muted-2:#85847e;
+  --inverse:#0e0f11;--on-inverse:#f4f3f1;color-scheme:light;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--card);color:var(--text);overflow:hidden;
+  font-family:var(--font);-webkit-font-smoothing:antialiased;
+  user-select:none;-webkit-user-select:none;
+}
+.badge{
+  position:absolute;left:14px;top:14px;z-index:3;
+  font-size:var(--fs-xs);font-weight:var(--fw-medium);color:var(--text);
+  background:var(--fill-2);border-radius:var(--r-pill);padding:4px 10px;
+}
+
+/* Avatars and card art: grainy mesh, mixed (Noah, 12 Nov 2026).
+   Three soft spots of colour melt over a main colour, under a fine grain.
+   Each family is turned a different way (--p1..3), so the light spot and the deep spot
+   never sit in the same corner twice and a row of them does not read as one recipe. */
+[data-av]{background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),radial-gradient(70% 70% at var(--p1),var(--av-l) 0,transparent 70%),radial-gradient(60% 60% at var(--p2),var(--av-p) 0,transparent 70%),radial-gradient(75% 75% at var(--p3),var(--av-b) 0,transparent 72%),var(--av-a)!important;background-blend-mode:overlay,normal,normal,normal,normal!important}
+[data-av="1"]{--av-l:#ff8fd0;--av-a:#ff3fa6;--av-b:#6a35ff;--av-p:#ffd3ec;--p1:12.0% 10.0%;--p2:92.0% 8.0%;--p3:88.0% 96.0%}
+[data-av="2"]{--av-l:#7fe3ff;--av-a:#2b8cff;--av-b:#5a35ff;--av-p:#cdf3ff;--p1:102.9% 65.6%;--p2:34.6% 107.4%;--p3:-5.9% 29.2%}
+[data-av="3"]{--av-l:#d6ff5a;--av-a:#22d39a;--av-b:#0a8a8f;--av-p:#efffb0;--p1:65.6% -2.9%;--p2:107.4% 65.4%;--p3:29.2% 105.9%}
+[data-av="4"]{--av-l:#ffb866;--av-a:#ff4a5e;--av-b:#c31f86;--av-p:#ffe0b8;--p1:34.4% 102.9%;--p2:-7.4% 34.6%;--p3:70.8% -5.9%}
+[data-av="5"]{--av-l:#fff27a;--av-a:#ffa51f;--av-b:#ff4a2e;--av-p:#fff3bf;--p1:-3.6% 62.9%;--p2:34.6% -7.4%;--p3:108.8% 40.1%}
+[data-av="6"]{--av-l:#7dffea;--av-a:#1fa8ff;--av-b:#3a3cff;--av-p:#c9fff5;--p1:90.0% 12.0%;--p2:92.0% 92.0%;--p3:4.0% 88.0%}
+[data-av="7"]{--av-l:#ffd3f1;--av-a:#c07bff;--av-b:#ff4f9a;--av-p:#f0dcff;--p1:62.9% 103.6%;--p2:-7.4% 65.4%;--p3:40.1% -8.8%}
+[data-av="8"]{--av-l:#c2ffd6;--av-a:#2fe08a;--av-b:#0a9a6a;--av-p:#e2ffec;--p1:37.1% -3.6%;--p2:107.4% 34.6%;--p3:59.9% 108.8%}
+[data-av="9"]{--av-l:#ffe3b5;--av-a:#ff8a6a;--av-b:#ff3f86;--av-p:#ffe6d8;--p1:10.0% 88.0%;--p2:8.0% 8.0%;--p3:96.0% 12.0%}
+[data-av="10"]{--av-l:#bfa0ff;--av-a:#5a3cff;--av-b:#1a1ab0;--av-p:#e0d2ff;--p1:103.6% 37.1%;--p2:65.4% 107.4%;--p3:-8.8% 59.9%}
+[data-av="11"]{--av-l:#f6ff86;--av-a:#8ae83a;--av-b:#1fb86a;--av-p:#fbffc8;--p1:-2.9% 34.4%;--p2:65.4% -7.4%;--p3:105.9% 70.8%}
+[data-av="12"]{--av-l:#ffa3cd;--av-a:#e03cff;--av-b:#6a2cff;--av-p:#ffd2ea;--p1:88.0% 90.0%;--p2:8.0% 92.0%;--p3:12.0% 4.0%}
+
+/* Expand Card: three stay rows. Click one and it rises to the top and opens
+   into a detail card (photo grows, title slides under it, details fade in)
+   while the others fall away. Click again to fold it back. */
+.list{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:min(320px,calc(100vw - 48px));height:280px;
+  font-family:var(--font-inter,Inter),Inter,"Helvetica Neue",Arial,sans-serif;
+}
+.ex{position:absolute;left:0;top:0;width:100%;height:72px;border-radius:20px;background:var(--surface);overflow:hidden;cursor:pointer;will-change:transform,height,opacity}
+.thumb{position:absolute;left:12px;top:12px;width:48px;height:48px;border-radius:12px}
+.head{position:absolute;left:0;top:0;will-change:transform}
+.t{font-size:var(--fs-base);font-weight:var(--fw-bold);line-height:20px;white-space:nowrap;color:var(--text)}
+.s{font-size:var(--fs-sm);line-height:18px;color:var(--muted);white-space:nowrap}
+.price{position:absolute;right:16px;top:0;font-size:var(--fs-base);font-weight:var(--fw-bold);color:var(--text);will-change:transform}
+.more{position:absolute;left:16px;right:16px;top:176px;opacity:0;will-change:transform,opacity}
+.more p{font-size:var(--fs-sm);line-height:19px;color:var(--text-2)}
+.row{display:flex;align-items:center;gap:6px;margin-top:12px}
+.chip,.go{white-space:nowrap}
+.chip{font-size:var(--fs-xs);font-weight:var(--fw-medium);padding:5px 10px;border-radius:var(--r-pill);background:var(--fill-2);color:var(--text-2)}
+.go{margin-left:auto;font-size:var(--fs-sm);font-weight:var(--fw-bold);padding:7px 14px;border-radius:var(--r-pill);background:var(--inverse);color:var(--on-inverse)}
+
+</style>
+</head>
+<body>
+<div class="list" id="list">
+  <div class="ex" data-i="0"><div class="thumb" data-av="2"></div><div class="head"><p class="t">Atlas House</p><p class="s">Lisbon · 4 nights</p></div><span class="price">$820</span>
+    <div class="more"><p>A quiet stone house above the old town, with a roof terrace.</p><div class="row"><span class="chip">2 beds</span><span class="chip">Terrace</span><span class="go">Book stay</span></div></div></div>
+  <div class="ex" data-i="1"><div class="thumb" data-av="10"></div><div class="head"><p class="t">Pine Cabin</p><p class="s">Oslo · 3 nights</p></div><span class="price">$540</span>
+    <div class="more"><p>A timber cabin at the edge of the forest, with a lake sauna.</p><div class="row"><span class="chip">1 bed</span><span class="chip">Sauna</span><span class="go">Book stay</span></div></div></div>
+  <div class="ex" data-i="2"><div class="thumb" data-av="9"></div><div class="head"><p class="t">Salt Loft</p><p class="s">Tunis · 5 nights</p></div><span class="price">$610</span>
+    <div class="more"><p>A white loft two streets from the sea, with tall windows.</p><div class="row"><span class="chip">2 beds</span><span class="chip">Sea view</span><span class="go">Book stay</span></div></div></div>
+</div>
+<script>
+// Tiny spring engine shared by every component.
+// Springs, sim-time timers (so slow-mo slows them too), one rAF loop, and token readers.
+window.Motion = (() => {
+  // theme: shared by every page through localStorage, live-updated by the gallery
+  const setTheme = t => { document.documentElement.dataset.theme = t === 'light' ? 'light' : 'dark'; };
+  try { setTheme(localStorage.getItem('ms-theme')); } catch { setTheme('dark'); }
+  addEventListener('storage', e => { if (e.key === 'ms-theme') setTheme(e.newValue); });
+
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const S = (x, k = 400, c = 30) => ({ x, v: 0, t: x, k, c });
+  const tune = (s, k, c) => { s.k = k; s.c = reduce ? 2 * Math.sqrt(k) : c; };
+  const step = (s, dt) => { const a = -s.k * (s.x - s.t) - s.c * s.v; s.v += a * dt; s.x += s.v * dt; };
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+  // tokens from shared/tokens.css
+  const token = (name, fallback = '') =>
+    getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+  const num = (name, fallback) => parseFloat(token(name, String(fallback)));
+  const spring = (name, fallback) => token(name, fallback).split(/\s+/).map(Number);
+
+  let timeScale = 1;
+  const timers = [];
+  const after = (sec, fn) => { const t = { t: sec, fn }; timers.push(t); return t; };
+  const cancel = t => { const i = timers.indexOf(t); if (i > -1) timers.splice(i, 1); };
+
+  // slow motion, synced with a parent page when embedded
+  const slowListeners = [];
+  function setSlow(v, fromParent = false) {
+    timeScale = v ? .25 : 1;
+    slowListeners.forEach(f => f(v));
+    if (!fromParent && parent !== window) parent.postMessage({ type: 'motion:slow-changed', on: v }, '*');
+  }
+  addEventListener('message', e => {
+    if (e.data && e.data.type === 'motion:slow') setSlow(!!e.data.on, true);
+    if (e.data && e.data.type === 'motion:theme') setTheme(e.data.theme);
+  });
+
+  const comps = [];
+  let last = performance.now();
+  function loop(now) {
+    const dt = Math.min((now - last) / 1000, 1 / 30) * timeScale; last = now;
+    for (let i = timers.length - 1; i >= 0; i--) {
+      if ((timers[i].t -= dt) <= 0) timers.splice(i, 1)[0].fn();
+    }
+    const sub = 4;
+    for (let k = 0; k < sub; k++) comps.forEach(c => c.frame(dt / sub));
+    comps.forEach(c => c.render());
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  return {
+    S, tune, step, clamp, token, num, spring, after, cancel,
+    register: c => comps.push(c),
+    get timeScale() { return timeScale; },
+    get slow() { return timeScale !== 1; },
+    setSlow, onSlow: f => slowListeners.push(f),
+    svg: (p, sw = 1.8) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`,
+  };
+})();
+
+</script>
+<script>
+// Expand Card
+// One progress spring per row drives everything: card height, photo size and
+// corner, title and price position. The chosen row also rides up to the top
+// while the others sink and fade. Plays by itself until you click.
+(() => {
+  const { S, step, clamp, after } = Motion;
+  const list = document.getElementById('list');
+  const els = [...document.querySelectorAll('.ex')];
+  const LIST_H = 280, ROW = 72, GAP = 8, PAD = (LIST_H - (3 * ROW + 2 * GAP)) / 2;
+  const rows = els.map((el, i) => ({
+    el, i,
+    thumb: el.querySelector('.thumb'), head: el.querySelector('.head'),
+    price: el.querySelector('.price'), more: el.querySelector('.more'),
+    p: S(0, 240, 21), a: S(0, 260, 28), y: S(PAD + i * (ROW + GAP), 300, 26), o: S(1, 300, 30), s: S(1, 300, 26),
+  }));
+  let open = -1, clock = 0, userUntil = 0, k = 0;
+
+  function show(i) {
+    open = i;
+    rows.forEach(r => {
+      const home = PAD + r.i * (ROW + GAP);
+      if (i < 0) { r.p.t = 0; r.a.t = 0; r.y.t = home; r.o.t = 1; r.s.t = 1; return; }
+      if (r.i === i) { r.p.t = 1; r.y.t = 0; r.o.t = 1; r.s.t = 1; after(.16, () => { if (open === i) r.a.t = 1; }); r.el.style.zIndex = 2; }
+      else { r.a.t = 0; r.p.t = 0; r.o.t = 0; r.s.t = .94; r.y.t = home + (r.i < i ? -24 : 24); r.el.style.zIndex = 1; }
+    });
+  }
+
+  rows.forEach(r => r.el.addEventListener('click', () => {
+    userUntil = clock + 7;
+    show(open === r.i ? -1 : r.i);
+  }));
+
+  (function auto() {
+    if (clock >= userUntil) {
+      if (open < 0) { show(k++ % 3); after(2.8, auto); return; }
+      show(-1);
+    }
+    after(1.3, auto);
+  })();
+
+  Motion.register({
+    frame(dt) {
+      clock += dt;
+      rows.forEach(r => [r.p, r.a, r.y, r.o, r.s].forEach(s => step(s, dt)));
+    },
+    render() {
+      const W = list.offsetWidth;
+      rows.forEach(r => {
+        const p = r.p.x, q = clamp(p, 0, 1);
+        const full = 176 + r.more.offsetHeight + 16;
+        r.el.style.height = (ROW + p * (full - ROW)).toFixed(2) + 'px';
+        r.el.style.transform = `translateY(${r.y.x.toFixed(2)}px) scale(${r.s.x.toFixed(4)})`;
+        r.el.style.opacity = clamp(r.o.x, 0, 1).toFixed(3);
+        r.el.style.pointerEvents = r.o.t > .5 ? 'auto' : 'none';
+        r.thumb.style.width = (48 + q * (W - 24 - 48)).toFixed(2) + 'px';
+        r.thumb.style.height = Math.max(48, 48 + p * 56).toFixed(2) + 'px';
+        r.thumb.style.borderRadius = (12 + q * 4).toFixed(2) + 'px';
+        r.head.style.transform = `translate(${(72 - 56 * q).toFixed(2)}px,${(16 + 112 * p).toFixed(2)}px)`;
+        r.price.style.transform = `translateY(${(26 + 106 * p).toFixed(2)}px)`;
+        const a = clamp(r.a.x, 0, 1);
+        r.more.style.opacity = a.toFixed(3);
+        r.more.style.transform = `translateY(${((1 - r.a.x) * 10).toFixed(2)}px)`;
+      });
+    },
+  });
+})();
+
+</script>
+</body>
+</html>
+
+shunaka bo'lsin ko'rinishi
+_________
+
+har bir musicda granient bo'lsin
+- playlistni ham o'zini granienti bo'lsin, yani bironta playlistni ochsa o'ng tomonda katta sectionda ochiiladi shuni orka foniga ko'sh
+
+granient:
+## Integrate the <Grainient /> component from React Bits
+
+You are helping integrate an open-source React component into an existing application.
+
+### Component: Grainient
+### Variant: TypeScript + CSS
+
+
+---
+
+### Usage Example
+```jsx
+import Grainient from './Grainient';
+
+<div style={{ width: '100%', height: '600px', position: 'relative' }}>
+  <Grainient
+    colors={["#120f17","#3f0d1a","#be123c","#fb923c","#fde68a"]}
+    angle={150}
+    flow={0.8}
+    silk={0.4}
+    grainAmount={0.08}
+    type="radial"
+    interactive={false}
+    clickSwirl={false}
+/>
+</div>
+```
+
+### Props
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| colors | string[] | ['#120f17', '#2a0f0a', '#9a3412', '#f97316', '#fed7aa'] | Two to eight colors, from the base to the highlight. Use your page background as the first color so the edges blend in. |
+| type | 'linear' | 'radial' | 'linear' | Linear runs the colors across the container. Radial puts the last color in the middle. |
+| angle | number | 55 | Direction of a linear gradient in degrees, like CSS: 0 runs bottom to top, 90 left to right. |
+| bands | number | 1 | How many times the colors repeat back and forth, from 1 to 8. Higher values make stripes or rings. |
+| softness | number | 1 | Blend between colors, from 0 (crisp, poster-like edges) to 1 (smooth). |
+| flow | number | 0.8 | How much the gradient bends into waves, from 0 (straight) to 3. Above 1 it starts to marble. |
+| scale | number | 1 | Size of the waves, from 0.25 to 3. |
+| speed | number | 1 | Speed of the drifting waves. 0 holds them still. |
+| silk | number | 0.35 | Satin shading on the folds, from 0 to 1. Combine with bands for glossy ribbons. |
+| grainAmount | number | 0.08 | Strength of the film grain, from 0 to 0.5. |
+| grainSize | number | 1.2 | Size of the grain in pixels, from 0.5 to 4. |
+| grainAnimated | boolean | true | Shifts the grain every frame like film. When off, the grain stays fixed. |
+| contrast | number | 1 | Contrast of the colors, from 0.2 to 2. |
+| saturation | number | 1 | Saturation of the colors, from 0 (grayscale) to 2. |
+| variation | number | 0 | Picks a different pattern of waves. |
+| interactive | boolean | true | Lets the cursor drag the colors around like paint. The trail settles back after a moment. |
+| stir | number | 1 | How far the cursor drags the colors, from 0 to 2. |
+| clickSwirl | boolean | true | Clicking twists the colors into a swirl that slowly unwinds. |
+| intro | boolean | true | Blooms the colors out from the middle on mount. |
+| lightMode | boolean | false | Builds a light version of the palette: the first color becomes white and the others run in reverse, deepest last. |
+| dpr | number | auto | Maximum device pixel ratio, capped at 2. |
+| className | string | '' | Extra class names for the container. |
+| style | CSSProperties | - | Inline styles for the container. |
+
+### Full Component Source
+```tsx
+'use client';
+
+import { useEffect, useRef, type CSSProperties, type HTMLAttributes } from 'react';
+import './Grainient.css';
+
+export type GrainientType = 'linear' | 'radial';
+
+export interface GrainientProps extends Omit<HTMLAttributes<HTMLDivElement>, 'style'> {
+  colors?: string[];
+  type?: GrainientType;
+  angle?: number;
+  bands?: number;
+  speed?: number;
+  flow?: number;
+  scale?: number;
+  softness?: number;
+  silk?: number;
+  grainAmount?: number;
+  grainSize?: number;
+  grainAnimated?: boolean;
+  contrast?: number;
+  saturation?: number;
+  variation?: number;
+  interactive?: boolean;
+  stir?: number;
+  clickSwirl?: boolean;
+  intro?: boolean;
+  lightMode?: boolean;
+  dpr?: number;
+  style?: CSSProperties;
+}
+
+type Settings = {
+  colors: string[];
+  type: number;
+  angle: number;
+  bands: number;
+  speed: number;
+  flow: number;
+  scale: number;
+  softness: number;
+  silk: number;
+  grainAmount: number;
+  grainSize: number;
+  grainAnimated: boolean;
+  contrast: number;
+  saturation: number;
+  variation: number;
+  interactive: boolean;
+  stir: number;
+  clickSwirl: boolean;
+  intro: boolean;
+  lightMode: boolean;
+  dpr?: number;
+};
+
+type Sample = { x: number; y: number; vx: number; vy: number; age: number; grow: number; done: boolean };
+
+type Spin = { x: number; y: number; age: number; direction: number };
+
+type Program = { program: WebGLProgram; uniforms: Record<string, WebGLUniformLocation | null> };
+
+const MAX_COLORS = 8;
+const MAX_STIRS = 24;
+const MAX_TWIRLS = 4;
+const STIR_LIFE = 1.3;
+const STIR_STEP = 0.06;
+const TWIRL_LIFE = 2.6;
+const INTRO_SECONDS = 1.6;
+const DEFAULT_COLORS = ['#120f17', '#2a0f0a', '#9a3412', '#f97316', '#fed7aa'];
+const TYPES: Record<string, number> = { linear: 0, radial: 1 };
+const LIFT = 0.2;
+
+const VERTEX = `#version 300 es
+out vec2 vUv;
+void main() {
+  vec2 p = vec2(float((gl_VertexID << 1) & 2), float(gl_VertexID & 2));
+  vUv = p;
+  gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0);
+}`;
+
+const FIELD = `#version 300 es
+precision highp float;
+precision highp int;
+uniform float uAspect;
+uniform float uTime;
+uniform vec3 uRamp[8];
+uniform int uCount;
+uniform int uType;
+uniform vec2 uDir;
+uniform float uExtent;
+uniform float uBands;
+uniform float uSoftness;
+uniform float uFlow;
+uniform float uScale;
+uniform float uSilk;
+uniform vec4 uStir[24];
+uniform float uStirWeight[24];
+uniform vec4 uTwirl[4];
+uniform vec2 uSeed;
+uniform float uContrast;
+uniform float uSaturation;
+uniform float uSettle;
+uniform float uReveal;
+in vec2 vUv;
+out vec4 outColor;
+
+vec2 hash2(vec2 p) {
+  vec3 q = fract(vec3(p.xyx) * vec3(0.1031, 0.103, 0.0973));
+  q += dot(q, q.yzx + 33.33);
+  return fract((q.xx + q.yz) * q.zy) * 2.0 - 1.0;
+}
+
+float noise(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  vec2 u = f * f * f * (f * (f * 6.0 - 15.0) + 10.0);
+  float a = dot(hash2(i), f);
+  float b = dot(hash2(i + vec2(1.0, 0.0)), f - vec2(1.0, 0.0));
+  float c = dot(hash2(i + vec2(0.0, 1.0)), f - vec2(0.0, 1.0));
+  float d = dot(hash2(i + vec2(1.0, 1.0)), f - vec2(1.0, 1.0));
+  return 0.5 + 0.5 * mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+}
+
+vec2 drift(vec2 p, float t) {
+  vec2 w1 = vec2(
+    noise(p * 0.85 + vec2(t * 0.11, t * 0.07)),
+    noise(p * 0.85 + vec2(4.1, 1.7) - vec2(t * 0.08, t * 0.12))
+  );
+  vec2 w2 = vec2(
+    noise(p * 1.55 + w1 * 1.8 + vec2(1.3, 7.1) + t * 0.05),
+    noise(p * 1.55 + w1 * 1.8 + vec2(6.4, 2.2) - t * 0.06)
+  );
+  return (w1 - 0.5) * 1.1 + (w2 - 0.5) * 0.55;
+}
+
+vec2 warp(vec2 p) {
+  vec2 q = p / uScale;
+  if (uType == 1) {
+    float turn = uTime * 0.35;
+    q = mat2(cos(turn), sin(turn), -sin(turn), cos(turn)) * q;
+  } else {
+    q += vec2(-uDir.y, uDir.x) * uTime * 0.45;
+  }
+  return p + drift(q + uSeed, uTime) * uFlow * uScale * uSettle;
+}
+
+float coord(vec2 p) {
+  vec2 w = warp(p);
+  return uType == 1 ? 1.0 - length(w) * 1.1 : dot(w, uDir) / uExtent + 0.5;
+}
+
+vec3 labToRgb(vec3 lab) {
+  float l = lab.x + 0.3963377774 * lab.y + 0.2158037573 * lab.z;
+  float m = lab.x - 0.1055613458 * lab.y - 0.0638541728 * lab.z;
+  float s = lab.x - 0.0894841775 * lab.y - 1.2914855480 * lab.z;
+  l = l * l * l;
+  m = m * m * m;
+  s = s * s * s;
+  return vec3(
+    4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+    -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+    -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s
+  );
+}
+
+vec3 encode(vec3 c) {
+  c = clamp(c, 0.0, 1.0);
+  return mix(c * 12.92, 1.055 * pow(c, vec3(1.0 / 2.4)) - 0.055, step(0.0031308, c));
+}
+
+void main() {
+  vec2 p = (vUv - 0.5) * vec2(uAspect, 1.0);
+  for (int i = 0; i < 24; i++) {
+    float w = uStirWeight[i];
+    if (w <= 0.0) continue;
+    vec2 d = p - uStir[i].xy;
+    p -= uStir[i].zw * w * exp(-dot(d, d) / 0.045);
+  }
+  for (int i = 0; i < 4; i++) {
+    float angle = uTwirl[i].z;
+    if (angle == 0.0) continue;
+    vec2 d = p - uTwirl[i].xy;
+    float a = angle * exp(-dot(d, d) / (uTwirl[i].w * uTwirl[i].w));
+    float c = cos(a);
+    float s = sin(a);
+    p = uTwirl[i].xy + mat2(c, -s, s, c) * d;
+  }
+  float raw = coord(p);
+  float s = raw;
+  if (uBands > 1.0) {
+    s *= uBands;
+    float cycle = floor(s);
+    s = fract(s);
+    if (mod(cycle, 2.0) > 0.5) s = 1.0 - s;
+  }
+  s = clamp(s, 0.0, 1.0);
+  float scaled = s * float(uCount - 1);
+  int index = int(min(floor(scaled), float(uCount - 2)));
+  float f = scaled - float(index);
+  float edge = max(uSoftness * 0.5, fwidth(scaled) * 0.75);
+  float shaped = smoothstep(0.5 - edge, 0.5 + edge, f);
+  vec3 from = uRamp[0];
+  vec3 to = uRamp[1];
+  for (int i = 0; i < 7; i++) {
+    if (i == index) {
+      from = uRamp[i];
+      to = uRamp[i + 1];
+    }
+  }
+  vec3 lab = mix(from, to, shaped);
+  if (uSilk > 0.0) {
+    vec2 grad = vec2(coord(p + vec2(0.004, 0.0)) - raw, coord(p + vec2(0.0, 0.004)) - raw) / 0.004;
+    vec2 slope = grad * sin(3.14159265 * clamp(raw, 0.0, 1.0) * uBands) * uSilk * 4.0;
+    vec3 normal = normalize(vec3(-slope, 1.0));
+    vec3 light = normalize(vec3(-uDir.y, uDir.x, 1.2));
+    float diffuse = dot(normal, light) - light.z;
+    lab = uRamp[0] + (lab - uRamp[0]) * (1.0 + (diffuse * 0.35 + max(diffuse, 0.0) * diffuse * 0.6) * uSilk);
+  }
+  lab = mix(uRamp[0], lab, smoothstep(0.0, 1.0, uReveal * 1.5 - length(vUv - 0.5) * 0.6));
+  lab.x = (lab.x - 0.55) * uContrast + 0.55;
+  lab.yz *= uSaturation;
+  outColor = vec4(encode(labToRgb(lab)), 1.0);
+}`;
+
+const COMPOSITE = `#version 300 es
+precision highp float;
+uniform sampler2D uField;
+uniform float uGrain;
+uniform float uGrainSize;
+uniform float uFrame;
+in vec2 vUv;
+out vec4 outColor;
+
+float hash(vec2 p) {
+  vec3 q = fract(vec3(p.xyx) * 0.1031);
+  q += dot(q, q.yzx + 33.33);
+  return fract((q.x + q.y) * q.z);
+}
+
+float clump(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x), mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
+}
+
+void main() {
+  vec3 color = texture(uField, vUv).rgb;
+  vec2 pixel = gl_FragCoord.xy + uFrame * vec2(17.0, 59.0);
+  float fine = hash(pixel) + hash(pixel + 7.13) - 1.0;
+  float coarse = (clump(pixel / max(uGrainSize, 1.0)) - 0.5) * 2.0;
+  float grain = mix(fine, coarse, clamp(uGrainSize - 1.0, 0.0, 1.0) * 0.8);
+  float luma = dot(color, vec3(0.2126, 0.7152, 0.0722));
+  color += grain * uGrain * (0.45 + 2.2 * luma * (1.0 - luma));
+  outColor = vec4(clamp(color, 0.0, 1.0), 1.0);
+}`;
+
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
+const toLinear = (value: number) => (value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
+
+const toLab = ([r, g, b]: number[]): number[] => {
+  const lr = toLinear(r);
+  const lg = toLinear(g);
+  const lb = toLinear(b);
+  const l = Math.cbrt(0.4122214708 * lr + 0.5363325363 * lg + 0.0514459929 * lb);
+  const m = Math.cbrt(0.2119034982 * lr + 0.6806995451 * lg + 0.1073969566 * lb);
+  const s = Math.cbrt(0.0883024619 * lr + 0.2817188376 * lg + 0.6299787005 * lb);
+  return [
+    0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
+    1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
+    0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s
+  ];
+};
+
+const compile = (gl: WebGL2RenderingContext, type: number, source: string) => {
+  const shader = gl.createShader(type);
+  if (!shader) return null;
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
+  if (gl.getShaderParameter(shader, gl.COMPILE_STATUS)) return shader;
+  gl.deleteShader(shader);
+  return null;
+};
+
+const link = (gl: WebGL2RenderingContext, fragmentSource: string): Program | null => {
+  const vertex = compile(gl, gl.VERTEX_SHADER, VERTEX);
+  const fragment = compile(gl, gl.FRAGMENT_SHADER, fragmentSource);
+  const program = gl.createProgram();
+  if (!vertex || !fragment || !program) return null;
+  gl.attachShader(program, vertex);
+  gl.attachShader(program, fragment);
+  gl.linkProgram(program);
+  gl.deleteShader(vertex);
+  gl.deleteShader(fragment);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    gl.deleteProgram(program);
+    return null;
+  }
+  const uniforms: Record<string, WebGLUniformLocation | null> = {};
+  const count = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
+  for (let i = 0; i < count; i++) {
+    const info = gl.getActiveUniform(program, i);
+    if (!info) continue;
+    const name = info.name.replace(/\[0\]$/, '');
+    uniforms[name] = gl.getUniformLocation(program, name);
+  }
+  return { program, uniforms };
+};
+
+const Grainient = ({
+  colors = DEFAULT_COLORS,
+  type = 'linear',
+  angle = 55,
+  bands = 1,
+  speed = 1,
+  flow = 0.8,
+  scale = 1,
+  softness = 1,
+  silk = 0.35,
+  grainAmount = 0.08,
+  grainSize = 1.2,
+  grainAnimated = true,
+  contrast = 1,
+  saturation = 1,
+  variation = 0,
+  interactive = true,
+  stir = 1,
+  clickSwirl = true,
+  intro = true,
+  lightMode = false,
+  dpr,
+  className = '',
+  style,
+  ...rest
+}: GrainientProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const wakeRef = useRef<(() => void) | null>(null);
+  const palette = (Array.isArray(colors) && colors.length ? colors : DEFAULT_COLORS).slice(0, MAX_COLORS);
+  const settings: Settings = {
+    colors: palette.length > 1 ? palette : [palette[0], palette[0]],
+    type: TYPES[type] ?? 0,
+    angle,
+    bands: clamp(bands, 1, 8),
+    speed: Math.max(0, speed),
+    flow: clamp(flow, 0, 3),
+    scale: clamp(scale, 0.25, 3),
+    softness: clamp(softness, 0, 1),
+    silk: clamp(silk, 0, 1),
+    grainAmount: clamp(grainAmount, 0, 0.5),
+    grainSize: clamp(grainSize, 0.5, 4),
+    grainAnimated,
+    contrast: clamp(contrast, 0.2, 2),
+    saturation: clamp(saturation, 0, 2),
+    variation: Math.max(0, variation),
+    interactive,
+    stir: clamp(stir, 0, 2),
+    clickSwirl,
+    intro,
+    lightMode,
+    dpr
+  };
+  const settingsRef = useRef(settings);
+  settingsRef.current = settings;
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const canvas = canvasRef.current;
+    const gl = canvas?.getContext('webgl2', {
+      alpha: false,
+      antialias: false,
+      depth: false,
+      stencil: false
+    });
+    if (!container || !canvas || !gl) return undefined;
+
+    const field = link(gl, FIELD);
+    const composite = link(gl, COMPOSITE);
+    if (!field || !composite) return undefined;
+    const fu = field.uniforms;
+    const cu = composite.uniforms;
+    const vao = gl.createVertexArray();
+    const target = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, target);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    const buffer = gl.createFramebuffer();
+    const fieldSize = { width: 0, height: 0 };
+
+    const probe = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+    const colorCache = new Map<string, number[]>();
+    const parse = (value: string): number[] => {
+      const key = String(value);
+      const cached = colorCache.get(key);
+      if (cached) return cached;
+      let rgb = [0, 0, 0];
+      if (probe) {
+        probe.clearRect(0, 0, 1, 1);
+        probe.fillStyle = '#000000';
+        probe.fillStyle = key;
+        probe.fillRect(0, 0, 1, 1);
+        const [r, g, b] = probe.getImageData(0, 0, 1, 1).data;
+        rgb = [r / 255, g / 255, b / 255];
+      }
+      colorCache.set(key, rgb);
+      return rgb;
+    };
+
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    const view = { width: 1, height: 1, ratio: 1 };
+    const ramp = new Float32Array(MAX_COLORS * 3);
+    const stirs = new Float32Array(MAX_STIRS * 4);
+    const stirWeights = new Float32Array(MAX_STIRS);
+    const twirls = new Float32Array(MAX_TWIRLS * 4);
+    const trail: Sample[] = [];
+    const spins: Spin[] = [];
+    const pointer = { x: 0.5, y: 0.5, sx: 0.5, sy: 0.5, vx: 0, inside: false, fresh: true };
+    let paletteKey = '';
+    let time = 0;
+    let introClock = settingsRef.current.intro && !reduce ? 0 : 1;
+    let frameSeed = 0;
+    let grainClock = 0;
+    let raf = 0;
+    let last = 0;
+    let visible = true;
+
+    const syncPalette = () => {
+      const s = settingsRef.current;
+      const key = `${s.colors.join(',')}|${s.lightMode}`;
+      if (key === paletteKey) return;
+      paletteKey = key;
+      const labs = s.colors.map(color => toLab(parse(color)));
+      if (!s.lightMode) {
+        labs.forEach((lab, i) => ramp.set(lab, i * 3));
+      } else {
+        const blank = labs.map(([L]) => Math.abs(L - labs[0][0]) < 0.1);
+        const tints = labs.filter((_, i) => !blank[i]).reverse();
+        labs.forEach((_, i) => {
+          const [L, a, b] = blank[i] ? [1, 0, 0] : (tints.shift() as number[]);
+          ramp.set([L + (1 - L) * LIFT, a * (1 - LIFT), b * (1 - LIFT)], i * 3);
+        });
+      }
+    };
+
+    const draw = () => {
+      const s = settingsRef.current;
+      const aspect = view.width / view.height;
+      syncPalette();
+      gl.bindVertexArray(vao);
+      gl.disable(gl.BLEND);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, buffer);
+      gl.viewport(0, 0, fieldSize.width, fieldSize.height);
+      gl.useProgram(field.program);
+      gl.uniform1f(fu.uAspect, aspect);
+      gl.uniform1f(fu.uTime, time);
+      gl.uniform3fv(fu.uRamp, ramp);
+      gl.uniform1i(fu.uCount, s.colors.length);
+      const radians = (s.angle * Math.PI) / 180;
+      gl.uniform1i(fu.uType, s.type);
+      gl.uniform2f(fu.uDir, Math.sin(radians), Math.cos(radians));
+      gl.uniform1f(fu.uExtent, aspect * Math.abs(Math.sin(radians)) + Math.abs(Math.cos(radians)));
+      gl.uniform1f(fu.uBands, s.bands);
+      gl.uniform1f(fu.uSoftness, s.softness);
+      gl.uniform1f(fu.uFlow, s.flow);
+      gl.uniform1f(fu.uScale, s.scale);
+      gl.uniform1f(fu.uSilk, s.silk);
+      gl.uniform4fv(fu.uStir, stirs);
+      gl.uniform1fv(fu.uStirWeight, stirWeights);
+      gl.uniform4fv(fu.uTwirl, twirls);
+      gl.uniform2f(fu.uSeed, s.variation * 3.17, s.variation * 1.91);
+      gl.uniform1f(fu.uContrast, s.contrast);
+      gl.uniform1f(fu.uSaturation, s.saturation);
+      gl.uniform1f(fu.uSettle, introClock * introClock * (3 - 2 * introClock));
+      gl.uniform1f(fu.uReveal, introClock);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.useProgram(composite.program);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, target);
+      gl.uniform1i(cu.uField, 0);
+      gl.uniform1f(cu.uGrain, s.grainAmount);
+      gl.uniform1f(cu.uGrainSize, s.grainSize * view.ratio);
+      gl.uniform1f(cu.uFrame, frameSeed);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    };
+
+    const resize = () => {
+      const s = settingsRef.current;
+      view.width = Math.max(1, container.clientWidth);
+      view.height = Math.max(1, container.clientHeight);
+      view.ratio = Math.min(s.dpr || window.devicePixelRatio || 1, 2);
+      canvas.width = Math.max(1, Math.round(view.width * view.ratio));
+      canvas.height = Math.max(1, Math.round(view.height * view.ratio));
+      const width = Math.max(1, Math.round(canvas.width / 2));
+      const height = Math.max(1, Math.round(canvas.height / 2));
+      if (width !== fieldSize.width || height !== fieldSize.height) {
+        fieldSize.width = width;
+        fieldSize.height = height;
+        gl.bindTexture(gl.TEXTURE_2D, target);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, buffer);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target, 0);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      }
+      draw();
+      wake();
+    };
+
+    const updateTouches = (dt: number, aspect: number) => {
+      const s = settingsRef.current;
+      const follow = 1 - Math.exp(-dt / 0.06);
+      const px = pointer.sx;
+      const py = pointer.sy;
+      pointer.sx += (pointer.x - pointer.sx) * follow;
+      pointer.sy += (pointer.y - pointer.sy) * follow;
+      const vx = ((pointer.sx - px) / dt) * aspect;
+      const vy = (pointer.sy - py) / dt;
+      pointer.vx = vx;
+      const head = trail[0];
+      trail.forEach(sample => {
+        if (sample.done) sample.age += dt;
+      });
+      if (s.interactive && pointer.inside && Math.hypot(vx, vy) > 0.02 && !reduce) {
+        if (!head || head.done) {
+          trail.unshift({ x: 0, y: 0, vx: 0, vy: 0, age: 0, grow: 0, done: false });
+          if (trail.length > MAX_STIRS) trail.pop();
+        }
+        const live = trail[0];
+        live.x = (pointer.sx - 0.5) * aspect;
+        live.y = pointer.sy - 0.5;
+        live.vx = vx;
+        live.vy = vy;
+        live.grow = Math.min(1, live.grow + dt / STIR_STEP);
+        live.done = live.grow >= 1;
+      } else if (head) {
+        head.done = true;
+      }
+      while (trail.length && trail[trail.length - 1].age > STIR_LIFE) trail.pop();
+      for (let i = 0; i < MAX_STIRS; i++) {
+        const sample = trail[i];
+        if (!sample) {
+          stirWeights[i] = 0;
+          continue;
+        }
+        const fade = 1 - sample.age / STIR_LIFE;
+        const cap = Math.min(1, 2.2 / Math.max(Math.hypot(sample.vx, sample.vy), 0.001));
+        stirs.set([sample.x, sample.y, sample.vx * cap, sample.vy * cap], i * 4);
+        stirWeights[i] = fade * fade * sample.grow * s.stir * 0.05;
+      }
+      spins.forEach(spin => {
+        spin.age += dt;
+      });
+      while (spins.length && spins[spins.length - 1].age > TWIRL_LIFE) spins.pop();
+      for (let i = 0; i < MAX_TWIRLS; i++) {
+        const spin = spins[i];
+        if (!spin) {
+          twirls[i * 4 + 2] = 0;
+          continue;
+        }
+        const k = spin.age / TWIRL_LIFE;
+        const envelope = Math.min(1, spin.age / 0.18) * (1 - k) * (1 - k);
+        twirls.set([spin.x, spin.y, spin.direction * 2.4 * envelope, 0.16 + 0.1 * Math.min(1, spin.age / 0.5)], i * 4);
+      }
+    };
+
+    const frame = (now: number) => {
+      raf = 0;
+      if (!visible || document.hidden) return;
+      const s = settingsRef.current;
+      const dt = last ? clamp((now - last) / 1000, 0.001, 0.05) : 1 / 60;
+      last = now;
+      if (!reduce) time += dt * s.speed * 0.16;
+      if (introClock < 1) introClock = Math.min(1, introClock + dt / INTRO_SECONDS);
+      grainClock += dt;
+      if (s.grainAnimated && !reduce && grainClock > 1 / 24) {
+        grainClock = 0;
+        frameSeed = (frameSeed + 1) % 97;
+      }
+      updateTouches(dt, view.width / view.height);
+      draw();
+      const busy =
+        (!reduce && (s.speed > 0 || s.grainAnimated)) || introClock < 1 || trail.length > 0 || spins.length > 0;
+      if (busy) raf = requestAnimationFrame(frame);
+      else last = 0;
+    };
+
+    function wake() {
+      if (!raf && visible && !document.hidden) raf = requestAnimationFrame(frame);
+    }
+
+    const locate = (event: PointerEvent) => {
+      const rect = container.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / Math.max(1, rect.width);
+      const y = 1 - (event.clientY - rect.top) / Math.max(1, rect.height);
+      pointer.inside = x >= 0 && x <= 1 && y >= 0 && y <= 1;
+      pointer.x = x;
+      pointer.y = y;
+      if (pointer.fresh || !pointer.inside) {
+        pointer.sx = x;
+        pointer.sy = y;
+        pointer.fresh = false;
+      }
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      locate(event);
+      if (pointer.inside || trail.length) wake();
+    };
+
+    const onPointerDown = (event: PointerEvent) => {
+      locate(event);
+      const s = settingsRef.current;
+      if (!pointer.inside || !s.clickSwirl || reduce) return;
+      spins.unshift({
+        x: (pointer.x - 0.5) * (view.width / view.height),
+        y: pointer.y - 0.5,
+        age: 0,
+        direction: pointer.vx < 0 ? 1 : -1
+      });
+      if (spins.length > MAX_TWIRLS) spins.pop();
+      wake();
+    };
+
+    const onPointerLeave = () => {
+      pointer.inside = false;
+    };
+
+    const onVisibility = () => {
+      last = 0;
+      wake();
+    };
+
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(container);
+    const intersection = new IntersectionObserver(entries => {
+      visible = entries.some(entry => entry.isIntersecting);
+      if (visible) {
+        last = 0;
+        wake();
+      }
+    });
+    intersection.observe(container);
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
+    window.addEventListener('pointerdown', onPointerDown, { passive: true });
+    document.documentElement.addEventListener('pointerleave', onPointerLeave);
+    document.addEventListener('visibilitychange', onVisibility);
+    resize();
+    wakeRef.current = wake;
+
+    return () => {
+      cancelAnimationFrame(raf);
+      wakeRef.current = null;
+      resizeObserver.disconnect();
+      intersection.disconnect();
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerdown', onPointerDown);
+      document.documentElement.removeEventListener('pointerleave', onPointerLeave);
+      document.removeEventListener('visibilitychange', onVisibility);
+      gl.deleteTexture(target);
+      gl.deleteFramebuffer(buffer);
+      gl.deleteVertexArray(vao);
+      gl.deleteProgram(field.program);
+      gl.deleteProgram(composite.program);
+      if (!canvas.isConnected) gl.getExtension('WEBGL_lose_context')?.loseContext();
+    };
+  }, []);
+
+  useEffect(() => {
+    wakeRef.current?.();
+  });
+
+  return (
+    <div
+      ref={containerRef}
+      className={`grainient-container${className ? ` ${className}` : ''}`}
+      style={style}
+      {...rest}
+    >
+      <canvas ref={canvasRef} className="grainient-canvas" aria-hidden="true" />
+    </div>
+  );
+};
+
+export default Grainient;
+
+```
+
+### Component CSS
+```css
+.grainient-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.grainient-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+```
+
+### Integration Instructions
+1. Install any listed dependencies.
+2. Copy the component source into the appropriate directory in the project.
+3. Import the CSS file alongside the component.
+4. Import and render the component using the usage example above as a starting point.
+5. Adjust props as needed for the specific use case — refer to the props table for all available options.
+
+### More from React Bits
+The full library index, including everything reactbits.dev offers, is at https://reactbits.dev/llms.txt — fetch it if this component is not the right fit or the project needs more pieces.
+
+_________
+settings granients:
+animated grain off
+grain size - 0px
+interactive off
+click swirl off
+
+_________
+
+agar playlistdan chiksa barcha ko'shiklar degan sectionga kaytsin
+
+_______
+
+playlist ko'rinishi:
+o'ng tomondagi sectionda
+ikkinchi rasmga kara
+shuyerda playlistdagi musiclar + orkasida granient bo'lsin
+pastdagi goeyni olib tashla
+
+_+____
+
+uchinchi rasm:
+- Tahrirlash
+- Lyrics
+- Pleylistga qo'shish
+- O'chirish
+____________
+
+to'rtinchi rasm orka fonda aurora bor shuni olib tashla
+
+
+
+
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-11-15T01:31:19+05:00.
+
+The user has uploaded 4 image(s):
+- C:/Users/i7/.gemini/antigravity/brain/cc27e159-4d12-445c-b043-8099d3cd53d9/.user_uploaded/media_1794687754914_8e5c4520.jpg
+- C:/Users/i7/.gemini/antigravity/brain/cc27e159-4d12-445c-b043-8099d3cd53d9/.user_uploaded/media_1794688108410_78609421.png
+- C:/Users/i7/.gemini/antigravity/brain/cc27e159-4d12-445c-b043-8099d3cd53d9/.user_uploaded/media_1794688159088_38abc54a.png
+- C:/Users/i7/.gemini/antigravity/brain/cc27e159-4d12-445c-b043-8099d3cd53d9/.user_uploaded/media_1794688264746_af7f7b86.png
+You can embed these images in an artifact if you need the USER to review them.
+</ADDITIONAL_METADATA>

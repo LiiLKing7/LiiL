@@ -1,0 +1,10 @@
+==================================================
+LiiL - Vazifalar Roʻyxati
+Oxirgi yangilanish: 11/19/2026, 6:40:10 PM
+==================================================
+
+[FAOL VAZIFALAR]
+- [ ] Yaxshiroq AI topish yoki Geminini upgrade qilish | medium | work
+
+[BAJARILGAN VAZIFALAR]
+- [x] Sleep early | high | general

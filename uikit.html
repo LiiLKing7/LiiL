@@ -1,0 +1,2379 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LiiL UI — Glassmorphism & coss.com Komponentlar Kutubxonasi</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="module" src="https://liquidglass.dev/lib/components.js"></script>
+<style>
+/* ==========================================================================
+   1. DESIGN TOKENS & LIQUID GLASS VARIABLES (LiiL + coss.com)
+   ========================================================================== */
+:root {
+  --bg: #f6f6f8;
+  --bg-mesh-1: rgba(120, 119, 198, 0.14);
+  --bg-mesh-2: rgba(56, 189, 248, 0.12);
+  --bg-mesh-3: rgba(34, 197, 94, 0.08);
+  --fg: #0a0a0a;
+  --sub: #6b6b70;
+  --ln: rgba(0, 0, 0, .1);
+  --ln-strong: rgba(0, 0, 0, .18);
+  --soft: rgba(0, 0, 0, .05);
+  --soft-hover: rgba(0, 0, 0, .08);
+  --tint: rgba(255, 255, 255, .58);
+  --tint2: rgba(255, 255, 255, .78);
+  --spec: rgba(255, 255, 255, .65);
+  --ok: #16a34a;
+  --warn: #eab308;
+  --err: #dc2626;
+  --info: #2563eb;
+  --seg: #fff;
+  --trk: #ececee;
+  --sh1: 0 1px 3px rgba(0, 0, 0, .08);
+  --sh2: 0 8px 28px rgba(0, 0, 0, .1);
+  --blur: 26px;
+  --sat: 180%;
+  --d: 1.5s;
+  color-scheme: light;
+
+  /* liquidglass.dev custom properties */
+  --lg-accent: var(--fg);
+  --lg-on: var(--ok);
+  --lg-surface: var(--seg);
+  --lg-track: var(--trk);
+  --lg-track-off: #cfcfd4;
+  --lg-text: var(--fg);
+  --lg-text-muted: var(--sub);
+  --lg-on-glass: var(--fg);
+  --lg-tint: var(--tint);
+  --lg-tint-strong: var(--tint2);
+  --lg-indicator: var(--tint2);
+  --lg-focus: var(--fg);
+  --lg-shadow-1: var(--sh1);
+  --lg-shadow-2: var(--sh2);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #050507;
+    --bg-mesh-1: rgba(120, 119, 198, 0.18);
+    --bg-mesh-2: rgba(56, 189, 248, 0.12);
+    --bg-mesh-3: rgba(34, 197, 94, 0.1);
+    --fg: #ffffff;
+    --sub: #9a9aa0;
+    --ln: rgba(255, 255, 255, .13);
+    --ln-strong: rgba(255, 255, 255, .24);
+    --soft: rgba(255, 255, 255, .07);
+    --soft-hover: rgba(255, 255, 255, .12);
+    --tint: rgba(18, 18, 22, .52);
+    --tint2: rgba(24, 24, 28, .75);
+    --spec: rgba(255, 255, 255, .14);
+    --ok: #22c55e;
+    --warn: #facc15;
+    --err: #ef4444;
+    --info: #60a5fa;
+    --seg: #2a2a2e;
+    --trk: #18181b;
+    --sh2: 0 10px 32px rgba(0, 0, 0, .6);
+    --lg-track-off: #3a3a40;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #050507;
+  --bg-mesh-1: rgba(120, 119, 198, 0.18);
+  --bg-mesh-2: rgba(56, 189, 248, 0.12);
+  --bg-mesh-3: rgba(34, 197, 94, 0.1);
+  --fg: #ffffff;
+  --sub: #9a9aa0;
+  --ln: rgba(255, 255, 255, .13);
+  --ln-strong: rgba(255, 255, 255, .24);
+  --soft: rgba(255, 255, 255, .07);
+  --soft-hover: rgba(255, 255, 255, .12);
+  --tint: rgba(18, 18, 22, .52);
+  --tint2: rgba(24, 24, 28, .75);
+  --spec: rgba(255, 255, 255, .14);
+  --ok: #22c55e;
+  --warn: #facc15;
+  --err: #ef4444;
+  --info: #60a5fa;
+  --seg: #2a2a2e;
+  --trk: #18181b;
+  --sh2: 0 10px 32px rgba(0, 0, 0, .6);
+  --lg-track-off: #3a3a40;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; margin: 0; }
+html, body { min-height: 100%; }
+:root {
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+body {
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at 15% 15%, var(--bg-mesh-1), transparent 42%),
+    radial-gradient(circle at 85% 12%, var(--bg-mesh-2), transparent 38%),
+    radial-gradient(circle at 50% 85%, var(--bg-mesh-3), transparent 45%);
+  background-attachment: fixed;
+  color: var(--fg);
+  font: 400 13.5px/1.45 -apple-system, BlinkMacSystemFont, "SF Pro Text", Geist, system-ui, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color .45s, color .3s;
+  overflow-x: hidden;
+}
+
+button, input, select, textarea { font: inherit; color: inherit; }
+svg { flex: none; }
+code, pre, .mono { font-family: "Geist Mono", ui-monospace, SFMono-Regular, monospace; }
+:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+
+/* ==========================================================================
+   2. KEYFRAME ANIMATIONS (From LiiL.html + UI Kit helpers)
+   ========================================================================== */
+@keyframes rise { from { opacity: 0; translate: 0 20px; scale: .985; } }
+@keyframes drop { from { opacity: 0; translate: 0 -24px; } }
+@keyframes tin { from { opacity: 0; translate: 0 -8px; scale: .985; } }
+@keyframes pop { 50% { scale: 1.3; } }
+@keyframes dlg { from { opacity: 0; translate: 0 12px; scale: .95; } }
+@keyframes fade { from { opacity: 0; } }
+@keyframes out { to { opacity: 0; translate: 30px 0; max-height: 0; padding-block: 0; } }
+@keyframes slide { from { opacity: 0; translate: 26px 0; } }
+@keyframes shake { 20%, 60% { translate: -6px; } 40%, 80% { translate: 6px; } }
+@keyframes bump { 40% { scale: 1.12; } }
+@keyframes bob { 50% { translate: 0 -5px; } }
+@keyframes pulse { 50% { opacity: .35; scale: .7; } }
+@keyframes spin { to { rotate: 360deg; } }
+@keyframes wipe { from { clip-path: inset(0 100% 0 0); filter: blur(10px); scale: .94; } to { clip-path: inset(0); filter: blur(0); scale: 1; } }
+@keyframes letter { from { opacity: 0; translate: 0 24px; filter: blur(6px); } }
+@keyframes load { from { scale: 0 1; } }
+@keyframes tdrop { from { opacity: 0; translate: 0 30px; scale: .9; } }
+@keyframes tbye { to { opacity: 0; translate: 0 20px; scale: .92; } }
+
+/* ==========================================================================
+   3. INTRO CURTAIN ANIMATION
+   ========================================================================== */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--bg);
+  display: grid;
+  place-items: center;
+  transition: translate .85s cubic-bezier(.7, 0, .2, 1), border-radius .85s;
+  border-radius: 0;
+}
+.intro.out {
+  translate: 0 -102%;
+  border-radius: 0 0 48px 48px;
+  pointer-events: none;
+}
+.ig { display: grid; justify-items: center; gap: 14px; }
+.ig .logo { width: 112px; height: 112px; animation: wipe 1s .1s cubic-bezier(.3, .7, .2, 1) backwards; }
+.wm { display: flex; font-size: 40px; font-weight: 700; letter-spacing: .04em; align-items: baseline; gap: 2px; }
+.wm span { animation: letter .55s cubic-bezier(.2, .9, .3, 1) backwards; }
+.wm span:nth-child(1) { animation-delay: .55s; }
+.wm span:nth-child(2) { animation-delay: .65s; }
+.wm span:nth-child(3) { animation-delay: .75s; }
+.wm span:nth-child(4) { animation-delay: .85s; }
+.wm em {
+  font-style: normal;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--sub);
+  margin-left: 8px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--ln);
+  background: var(--soft);
+  animation: letter .55s .95s cubic-bezier(.2, .9, .3, 1) backwards;
+}
+.bar { width: 120px; height: 3px; border-radius: 3px; background: var(--ln); overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--fg); transform-origin: left; animation: load 1.2s .3s cubic-bezier(.5, 0, .2, 1) backwards; }
+.logo { filter: none; }
+:root[data-theme="dark"] .logo { filter: invert(1); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .logo { filter: invert(1); } }
+
+/* ==========================================================================
+   4. LIQUID GLASS ELEMENTS & FALLBACKS
+   ========================================================================== */
+lg-panel:not(:defined), .glass-panel {
+  display: block;
+  position: relative;
+  background: var(--tint);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(var(--sat));
+  backdrop-filter: blur(var(--blur)) saturate(var(--sat));
+  border: 1px solid var(--ln);
+  border-radius: var(--r, 24px);
+  box-shadow: var(--sh2), inset 0 1px 0 var(--spec);
+}
+lg-panel[radius="30"]:not(:defined) { --r: 30px; }
+lg-panel[radius="28"]:not(:defined) { --r: 28px; }
+lg-panel[radius="24"]:not(:defined) { --r: 24px; }
+lg-panel[radius="22"]:not(:defined) { --r: 22px; }
+lg-panel[radius="20"]:not(:defined) { --r: 20px; }
+lg-panel[radius="16"]:not(:defined) { --r: 16px; }
+
+lg-button:not(:defined), .coss-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 15px;
+  border-radius: 999px;
+  background: var(--tint);
+  border: 1px solid var(--ln);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  font-weight: 600;
+  font-size: 13.5px;
+  cursor: pointer;
+  box-shadow: var(--sh1), inset 0 1px 0 var(--spec);
+  transition: transform .18s cubic-bezier(.3, 1.5, .5, 1), background .2s, border-color .2s, opacity .2s;
+  user-select: none;
+  text-decoration: none;
+}
+lg-button:not(:defined):hover, .coss-btn:hover { border-color: var(--ln-strong); background: var(--tint2); }
+lg-button:not(:defined):active, .coss-btn:active { transform: scale(.96); }
+lg-button.pri:not(:defined), .coss-btn.pri { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+lg-button.gh:not(:defined), .coss-btn.gh { background: transparent; border-color: transparent; box-shadow: none; }
+lg-button.gh:not(:defined):hover, .coss-btn.gh:hover { background: var(--soft); }
+lg-button.danger:not(:defined), .coss-btn.danger {
+  color: var(--err);
+  background: color-mix(in srgb, var(--err) 12%, transparent);
+  border-color: color-mix(in srgb, var(--err) 28%, transparent);
+}
+lg-button.ok-btn:not(:defined), .coss-btn.ok-btn {
+  color: var(--ok);
+  background: color-mix(in srgb, var(--ok) 12%, transparent);
+  border-color: color-mix(in srgb, var(--ok) 28%, transparent);
+}
+lg-button[disabled]:not(:defined), .coss-btn[disabled] { opacity: .4; pointer-events: none; }
+lg-button .lg-button__el { min-height: 34px; padding: 0 15px; font-size: 13.5px; font-weight: 600; }
+.ib .lg-button__el, .ib:not(:defined), .coss-btn.ib { width: 34px; padding: 0; }
+lg-button.pri { --lg-tint: color-mix(in srgb, var(--fg) 90%, transparent); --lg-on-glass: var(--bg); }
+lg-button.gh .lg-surface { display: none; }
+
+lg-segmented:not(:defined), .coss-seg {
+  display: inline-flex;
+  padding: 3px;
+  gap: 3px;
+  border-radius: 12px;
+  background: var(--trk);
+  border: 1px solid var(--ln);
+  flex-wrap: wrap;
+}
+lg-segmented:not(:defined) button, .coss-seg button {
+  border: 0;
+  background: none;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 9px;
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--sub);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background .2s, color .2s, box-shadow .2s, scale .15s;
+}
+lg-segmented:not(:defined) button[aria-checked="true"], .coss-seg button[aria-checked="true"] {
+  background: var(--seg);
+  color: var(--fg);
+  box-shadow: var(--sh1);
+}
+.lg-seg__option { font-size: 13px !important; }
+
+.fsw { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 500; user-select: none; }
+.fsw input {
+  appearance: none;
+  width: 46px;
+  height: 26px;
+  border-radius: 99px;
+  background: var(--lg-track-off);
+  position: relative;
+  transition: background .25s;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.fsw input::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: var(--sh1);
+  transition: translate .3s cubic-bezier(.3, 1.4, .5, 1);
+}
+.fsw input:checked { background: var(--ok); }
+.fsw input:checked::after { translate: 20px; }
+.fsw input:disabled { opacity: .45; cursor: not-allowed; }
+
+lg-toast:not(:defined) {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: var(--tint2);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid var(--ln-strong);
+  box-shadow: var(--sh2);
+  font-weight: 500;
+}
+lg-toast:not(:defined)::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--k, var(--ok));
+  flex-shrink: 0;
+}
+lg-toast[data-k="ok"] { --k: var(--ok); }
+lg-toast[data-k="warn"] { --k: var(--warn); }
+lg-toast[data-k="del"] { --k: var(--err); }
+lg-toast[data-k="info"] { --k: var(--info); }
+.lg-toast__icon { color: var(--k); }
+
+/* ==========================================================================
+   5. TOPBAR & WINDOW CONTROLS
+   ========================================================================== */
+.topbar-wrap {
+  position: sticky;
+  top: 10px;
+  z-index: 30;
+  margin: 10px 14px 0;
+  animation: drop .7s var(--d) cubic-bezier(.2, .9, .3, 1) backwards;
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 52px;
+  padding: 6px 12px 6px 16px;
+  user-select: none;
+  flex-wrap: wrap;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: .02em;
+}
+.brand .logo { width: 28px; height: 28px; }
+.brand-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--soft);
+  border: 1px solid var(--ln);
+  color: var(--sub);
+}
+.tools { display: flex; justify-content: flex-end; align-items: center; gap: 6px; flex-wrap: wrap; }
+.ttl .lg-button__label, .ttl:not(:defined) { gap: 8px; }
+.chev { display: inline-grid; transition: rotate .3s cubic-bezier(.3, 1.2, .4, 1); }
+[aria-expanded="true"] .chev { rotate: 180deg; }
+
+/* Window controls capsule (own design from LiiL.html) */
+.wc {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 32px;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--soft);
+  border: 1px solid var(--ln);
+  margin-left: 4px;
+}
+.wc button {
+  width: 28px;
+  height: 24px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--sub);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background .2s, color .2s, scale .2s cubic-bezier(.3, 1.5, .5, 1);
+}
+.wc button:hover { background: var(--fg); color: var(--bg); scale: 1.08; }
+.wc button:active { scale: .9; }
+.wc i { width: 1px; height: 12px; background: var(--ln); margin: 0 2px; }
+.wc.sm { height: 28px; margin: 0; }
+.wc.sm button { width: 24px; height: 20px; }
+
+/* ==========================================================================
+   6. UI KIT CATALOG HEADER & FILTER BAR
+   ========================================================================== */
+.catalog-wrap {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 22px 16px 80px;
+  animation: rise .8s calc(var(--d) + .1s) cubic-bezier(.2, .8, .2, 1) backwards;
+}
+.kit-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+  padding: 14px 18px;
+}
+.kit-info h1 {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.kit-info p { color: var(--sub); font-size: 13px; margin-top: 2px; }
+.kit-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.search-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: var(--soft);
+  border: 1px solid var(--ln);
+  min-width: 210px;
+  transition: border-color .2s, background .2s;
+}
+.search-pill:focus-within {
+  border-color: var(--fg);
+  background: var(--tint2);
+}
+.search-pill input {
+  border: 0;
+  background: none;
+  outline: none;
+  width: 100%;
+  font-size: 13px;
+}
+.search-pill input::placeholder { color: var(--sub); }
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: "Geist Mono", monospace;
+  font-weight: 500;
+  background: var(--soft);
+  border: 1px solid var(--ln);
+  color: var(--sub);
+}
+
+/* ==========================================================================
+   7. UI KIT COMPONENT CARDS GRID
+   ========================================================================== */
+.kit-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+.col-6 { grid-column: span 6; }
+.col-4 { grid-column: span 4; }
+.col-8 { grid-column: span 8; }
+.col-12 { grid-column: span 12; }
+
+@media (max-width: 980px) {
+  .col-6, .col-4, .col-8 { grid-column: span 12; }
+}
+
+.comp-card {
+  transition: opacity .3s, transform .3s;
+}
+.comp-card.hidden-card {
+  display: none;
+}
+.comp-inner {
+  padding: 18px;
+  display: grid;
+  gap: 16px;
+}
+.comp-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--ln);
+  padding-bottom: 12px;
+}
+.comp-title-group { display: grid; gap: 3px; }
+.comp-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--sub);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.comp-head h2 {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -.01em;
+}
+.comp-head p {
+  font-size: 12.5px;
+  color: var(--sub);
+}
+.comp-stage {
+  padding: 16px;
+  border-radius: 18px;
+  background: var(--soft);
+  border: 1px solid var(--ln);
+  display: grid;
+  gap: 14px;
+}
+.stage-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.stage-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--sub);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Smooth collapsible code drawer (using LiiL .ao grid-template-rows pattern) */
+.code-drawer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .4s cubic-bezier(.3, .9, .3, 1);
+}
+.code-drawer.open { grid-template-rows: 1fr; }
+.code-drawer > div { overflow: hidden; min-height: 0; }
+.code-box {
+  margin-top: 4px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, .06);
+  border: 1px solid var(--ln);
+  position: relative;
+  font-size: 12px;
+  line-height: 1.55;
+  overflow-x: auto;
+}
+:root[data-theme="dark"] .code-box { background: rgba(255, 255, 255, .04); }
+.code-box pre { margin: 0; color: var(--fg); white-space: pre-wrap; word-break: break-word; }
+.copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--ln);
+  background: var(--tint2);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.copy-btn:hover { background: var(--fg); color: var(--bg); }
+
+/* ==========================================================================
+   8. LiiL + coss.com SPECIFIC COMPONENTS
+   ========================================================================== */
+
+/* 8.1 Add Block (Focus-within expanding input from LiiL.html) */
+.ar { display: flex; align-items: center; gap: 11px; padding: 12px 15px; }
+.ar.shake { animation: shake .4s; }
+.rc {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--fg);
+  display: grid;
+  place-items: center;
+  transition: rotate .4s cubic-bezier(.3, 1.4, .5, 1), background .25s, color .25s;
+}
+.add:focus-within .rc, .add.force-open .rc { rotate: 90deg; background: var(--fg); color: var(--bg); }
+.in0 { flex: 1; border: 0; background: none; font-size: 14.5px; min-width: 0; outline: none; }
+.in0::placeholder { color: var(--sub); }
+.ao { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s cubic-bezier(.3, .9, .3, 1); }
+.add:focus-within .ao, .add.force-open .ao { grid-template-rows: 1fr; }
+.ao > div { overflow: hidden; min-height: 0; }
+.ach { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; padding: 4px 16px 14px; }
+.ach lg-button { margin-left: auto; }
+
+/* 8.2 coss.com Standard Inputs, Groups & Select */
+.coss-field { display: grid; gap: 6px; font-size: 12.5px; font-weight: 500; }
+.input {
+  height: 36px;
+  border: 1px solid var(--ln);
+  border-radius: 12px;
+  background: var(--tint);
+  padding: 0 12px;
+  width: 100%;
+  color: var(--fg);
+  outline: none;
+  transition: border-color .2s, box-shadow .2s, background .2s;
+}
+.input:focus {
+  border-color: var(--fg);
+  background: var(--tint2);
+  box-shadow: 0 0 0 3px var(--soft);
+}
+.input.err-input {
+  border-color: var(--err);
+  background: color-mix(in srgb, var(--err) 6%, transparent);
+}
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.input-group .ig-left {
+  position: absolute;
+  left: 11px;
+  color: var(--sub);
+  pointer-events: none;
+  display: grid;
+}
+.input-group .input { padding-left: 34px; padding-right: 42px; }
+.input-group .ig-right {
+  position: absolute;
+  right: 8px;
+}
+
+/* 8.3 Tasks & Interactive Checkboxes (From LiiL.html) */
+.list { list-style: none; padding: 6px; }
+.task {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px;
+  border-radius: 12px;
+  transition: background .2s;
+  max-height: 68px;
+  border-bottom: 1px solid var(--ln);
+}
+.task:last-child { border-bottom-color: transparent; }
+.task:hover { background: var(--soft); }
+.task.in { animation: tin .4s cubic-bezier(.2, .8, .2, 1) backwards; }
+.swap .task { animation: tin .36s cubic-bezier(.2, .8, .2, 1) backwards; animation-delay: calc(var(--i) * 45ms); }
+.task.leave { overflow: hidden; animation: out .26s ease-in forwards; }
+.tt { flex: 1; min-width: 0; cursor: pointer; }
+.tn {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  font-size: 14px;
+  background: linear-gradient(currentColor, currentColor) no-repeat 0 58% / 0 1.5px;
+  transition: background-size .4s ease, color .3s;
+}
+.task.done .tn { background-size: 100% 1.5px; color: var(--sub); }
+.cb {
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid var(--sub);
+  border-radius: 50%;
+  background: none;
+  display: grid;
+  place-items: center;
+  color: var(--bg);
+  cursor: pointer;
+  padding: 0;
+  transition: background .25s, border-color .25s, scale .15s;
+}
+.cb:hover { border-color: var(--fg); }
+.cb:active { scale: .88; }
+.cb[aria-checked="true"] { background: var(--fg); border-color: var(--fg); }
+.cb svg { opacity: 0; scale: .4; transition: opacity .2s, scale .3s cubic-bezier(.3, 1.6, .5, 1); }
+.cb[aria-checked="true"] svg { opacity: 1; scale: 1; }
+.flag { display: grid; color: var(--warn); }
+.rb {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 9px;
+  background: none;
+  color: var(--sub);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity .2s, background .2s, color .2s;
+}
+.task:hover .rb, .rb:focus-visible { opacity: 1; }
+.rb:hover { background: var(--soft); color: var(--err); }
+
+/* 8.4 Badges & Status Pills */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  padding: 0 9px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--sub);
+  background: var(--soft);
+  border: 1px solid var(--ln);
+  white-space: nowrap;
+}
+.badge.red {
+  color: var(--err);
+  background: color-mix(in srgb, var(--err) 12%, transparent);
+  border-color: color-mix(in srgb, var(--err) 25%, transparent);
+}
+.badge.ok {
+  color: var(--ok);
+  background: color-mix(in srgb, var(--ok) 12%, transparent);
+  border-color: color-mix(in srgb, var(--ok) 25%, transparent);
+}
+.badge.ok::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse 1.6s infinite;
+}
+.badge.warn {
+  color: var(--warn);
+  background: color-mix(in srgb, var(--warn) 14%, transparent);
+  border-color: color-mix(in srgb, var(--warn) 28%, transparent);
+}
+.badge.info {
+  color: var(--info);
+  background: color-mix(in srgb, var(--info) 12%, transparent);
+  border-color: color-mix(in srgb, var(--info) 25%, transparent);
+}
+.bump-num {
+  display: inline-block;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 3px 11px;
+  border-radius: 999px;
+  background: var(--tint2);
+  border: 1px solid var(--ln);
+  font-variant-numeric: tabular-nums;
+}
+.bump-num.bump { animation: bump .4s; }
+
+/* 8.5 coss.com Accordion / Collapsible */
+.coss-acc { display: grid; gap: 8px; }
+.acc-item {
+  border: 1px solid var(--ln);
+  border-radius: 16px;
+  background: var(--tint);
+  overflow: hidden;
+  transition: border-color .2s, background .2s;
+}
+.acc-item[data-open="true"] {
+  border-color: var(--ln-strong);
+  background: var(--tint2);
+}
+.acc-trigger {
+  width: 100%;
+  border: 0;
+  background: none;
+  padding: 12px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 13.5px;
+  cursor: pointer;
+  text-align: left;
+}
+.acc-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .38s cubic-bezier(.3, .9, .3, 1);
+}
+.acc-item[data-open="true"] .acc-body { grid-template-rows: 1fr; }
+.acc-body > div { overflow: hidden; min-height: 0; }
+.acc-content {
+  padding: 0 15px 13px;
+  color: var(--sub);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* 8.6 coss.com Inline Callout Alerts */
+.coss-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--ln);
+  background: var(--tint);
+  font-size: 13px;
+}
+.coss-alert.ok { border-color: color-mix(in srgb, var(--ok) 32%, transparent); background: color-mix(in srgb, var(--ok) 8%, transparent); }
+.coss-alert.warn { border-color: color-mix(in srgb, var(--warn) 35%, transparent); background: color-mix(in srgb, var(--warn) 8%, transparent); }
+.coss-alert.err { border-color: color-mix(in srgb, var(--err) 32%, transparent); background: color-mix(in srgb, var(--err) 8%, transparent); }
+.coss-alert .al-ic { margin-top: 2px; }
+.coss-alert.ok .al-ic { color: var(--ok); }
+.coss-alert.warn .al-ic { color: var(--warn); }
+.coss-alert.err .al-ic { color: var(--err); }
+
+/* 8.7 Sparkline & Progress Metric Cards (From LiiL.html) */
+.mi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+@media (max-width: 680px) { .mi-grid { grid-template-columns: 1fr; } }
+.m { --c: var(--fg); }
+.m .in { padding: 12px 14px; display: grid; gap: 8px; }
+.m.warn { --c: var(--warn); }
+.m.hot { --c: var(--err); }
+.m .r { display: flex; align-items: center; justify-content: space-between; }
+.m .l { display: flex; align-items: center; gap: 7px; font-weight: 600; }
+.m .v { font-size: 23px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -.02em; transition: color .3s; }
+.m.hot .v { color: var(--err); }
+.m.warn .v { color: var(--warn); }
+.m .s { font-size: 12px; color: var(--sub); margin-top: -6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.spark { width: 100%; height: 48px; display: block; color: var(--c); transition: height .4s, color .3s; }
+.progress { height: 6px; border-radius: 9px; background: var(--soft); overflow: hidden; color: var(--c); }
+.progress i { display: block; height: 100%; background: currentColor; border-radius: 9px; transition: width .5s cubic-bezier(.3, .8, .3, 1), color .3s; }
+
+/* Range Slider */
+.coss-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 99px;
+  background: var(--trk);
+  border: 1px solid var(--ln);
+  outline: none;
+}
+.coss-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--fg);
+  cursor: pointer;
+  box-shadow: var(--sh1);
+  transition: transform .15s cubic-bezier(.3, 1.5, .5, 1);
+}
+.coss-range::-webkit-slider-thumb:hover { transform: scale(1.18); }
+
+/* 8.8 Animation Lab Stage */
+.anim-stage {
+  min-height: 128px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 50% 0%, var(--bg-mesh-1), transparent 70%),
+    var(--tint);
+  border: 1px dashed var(--ln-strong);
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+}
+.anim-actor {
+  padding: 14px 22px;
+  border-radius: 20px;
+  background: var(--tint2);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--ln-strong);
+  box-shadow: var(--sh2), inset 0 1px 0 var(--spec);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  font-size: 14px;
+}
+.anim-meta {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  font-size: 11px;
+  color: var(--sub);
+}
+
+/* 8.9 Empty State (From LiiL.html) */
+.empty {
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 28px 16px;
+  color: var(--sub);
+  animation: fade .5s;
+}
+.empty .ic {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--soft);
+  border: 1px solid var(--ln);
+  display: grid;
+  place-items: center;
+  margin: 0 auto 8px;
+  color: var(--fg);
+  animation: bob 3s ease-in-out infinite;
+}
+.empty b { color: var(--fg); font-weight: 600; display: block; }
+
+/* 8.10 coss.com Table & Avatar Group */
+.coss-table-wrap {
+  border: 1px solid var(--ln);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--tint);
+}
+.coss-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: left;
+}
+.coss-table th {
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--sub);
+  border-bottom: 1px solid var(--ln);
+  background: var(--soft);
+}
+.coss-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--ln);
+}
+.coss-table tr:last-child td { border-bottom: 0; }
+.coss-table tr:hover td { background: var(--soft); }
+
+/* ==========================================================================
+   9. OVERLAYS: TOP INSET SHEET, DIALOG MODAL, FLOATING MONITOR & TOASTS
+   ========================================================================== */
+.ov {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  background: rgba(0, 0, 0, .32);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .35s, visibility .35s;
+}
+.ov.on { opacity: 1; visibility: visible; }
+.sheet {
+  position: fixed;
+  top: calc(10px + env(safe-area-inset-top, 0px));
+  left: 50%;
+  width: min(560px, calc(100vw - 16px));
+  z-index: 50;
+  translate: -50% calc(-100% - 28px);
+  visibility: hidden;
+  transition: translate .6s cubic-bezier(.2, 1, .3, 1), visibility .6s;
+}
+.sheet.on { translate: -50% 0; visibility: visible; }
+.stack { display: grid; gap: 8px; padding: 10px; }
+.sh-h { display: flex; align-items: flex-start; justify-content: space-between; padding: 6px 4px 2px 8px; }
+.sh-h h2 { font-size: 17px; font-weight: 700; }
+.sh-h p { color: var(--sub); font-size: 12.5px; }
+.sh-p { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.tile { display: flex; }
+.tile:not(:defined) { flex-direction: column; align-items: flex-start; padding: 12px 14px; border-radius: 20px; width: 100%; }
+.tile .lg-button__el { flex-direction: column; align-items: flex-start; min-height: 88px; width: 100%; padding: 12px 14px; border-radius: 20px; }
+.tile .lg-button__label { flex-direction: column; align-items: flex-start; gap: 10px; width: 100%; }
+.tile .tin { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 18px; }
+.tile b { font-size: 25px; font-weight: 700; letter-spacing: -.02em; line-height: 1; font-variant-numeric: tabular-nums; }
+.tile .tx { font-weight: 600; color: var(--sub); font-size: 13px; }
+.tile.cur .tx { color: var(--fg); }
+.sheet.on .tile { animation: tin .5s cubic-bezier(.2, .9, .3, 1) backwards; animation-delay: calc(var(--i) * 70ms + 160ms); }
+
+/* Dialog Modal */
+dialog {
+  background: none;
+  border: 0;
+  padding: 0;
+  overflow: visible;
+  width: min(420px, 92vw);
+  margin: auto;
+  color: var(--fg);
+}
+dialog[open] { animation: dlg .35s cubic-bezier(.2, .9, .3, 1); }
+dialog::backdrop { background: rgba(0, 0, 0, .35); backdrop-filter: blur(4px); }
+dialog[open]::backdrop { animation: fade .3s; }
+.dp { display: grid; gap: 14px; padding: 18px; }
+.dp h3 { font-size: 17px; font-weight: 700; }
+.dp label { display: grid; gap: 6px; font-weight: 500; font-size: 12.5px; }
+.df { display: flex; gap: 8px; justify-content: flex-end; padding-top: 4px; }
+.df .gh { margin-right: auto; }
+
+/* Draggable Floating Glass Widget (.mon from LiiL.html) */
+.mon {
+  position: fixed;
+  top: 84px;
+  right: 20px;
+  width: 290px;
+  max-width: calc(100vw - 16px);
+  z-index: 35;
+  transition: width .4s cubic-bezier(.3, .9, .3, 1), opacity .3s, translate .3s, scale .3s, visibility .3s;
+}
+.mon.big { width: 520px; }
+.mon.hide { opacity: 0; visibility: hidden; translate: 0 14px; scale: .95; pointer-events: none; }
+.mon.drag { scale: 1.02; transition: scale .2s; }
+.mon .stack { gap: 6px; padding: 6px; }
+.mrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 8px 8px 14px;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.mon.drag .mrow { cursor: grabbing; }
+.mt { display: flex; align-items: center; gap: 8px; font-weight: 600; overflow: hidden; max-width: 180px; white-space: nowrap; transition: max-width .35s, opacity .3s; }
+.mon.mini .mt { max-width: 0; opacity: 0; }
+.mv { display: flex; gap: 10px; font-size: 12px; font-weight: 500; color: var(--sub); font-variant-numeric: tabular-nums; max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap; transition: max-width .4s, opacity .3s; }
+.mon.mini .mv { max-width: 210px; opacity: 1; }
+.mrow .t { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.mb { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .4s cubic-bezier(.3, .9, .3, 1); }
+.mon.mini .mb { grid-template-rows: 0fr; }
+.mb > div { overflow: hidden; min-height: 0; }
+
+/* Toast Container */
+#tr { position: fixed; left: 50%; bottom: 24px; translate: -50% 0; z-index: 80; display: flex; pointer-events: none; }
+#tr lg-toast { pointer-events: auto; animation: tdrop .5s cubic-bezier(.2, 1.2, .3, 1) backwards; }
+#tr lg-toast.bye { animation: tbye .35s forwards; }
+.tk {
+  border: 0;
+  background: var(--soft);
+  border-radius: 999px;
+  height: 26px;
+  padding: 0 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 8px;
+}
+.tk:hover { background: var(--fg); color: var(--bg); }
+
+@media (max-width: 700px) {
+  .sh-p { grid-template-columns: 1fr; }
+  .kit-bar { padding: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root { --d: 0s; }
+  .intro { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- =====================================================================
+     INTRO CURTAIN ANIMATION (From LiiL.html, replayable from UI Kit)
+     ===================================================================== -->
+<div class="intro" id="intro">
+  <div class="ig">
+    <img class="logo" alt="LiiL logo">
+    <div class="wm" aria-label="LiiL UI Kit">
+      <span>L</span><span>i</span><span>i</span><span>L</span>
+      <em>UI Kit</em>
+    </div>
+    <div class="bar"><i></i></div>
+  </div>
+</div>
+
+<!-- =====================================================================
+     STICKY GLASS TOPBAR
+     ===================================================================== -->
+<div class="topbar-wrap">
+  <lg-panel radius="24">
+    <div class="row">
+      <div class="brand">
+        <img class="logo" alt="LiiL">
+        <span>LiiL</span>
+        <span class="brand-tag">Glass + coss.com UI Kit</span>
+      </div>
+
+      <!-- Top Sheet Trigger -->
+      <lg-button class="ttl" id="menuB" radius="capsule" aria-label="Boʻlimlar oynasi">
+        <span id="menuL">Barcha komponentlar</span>
+        <span class="chev" id="chev"></span>
+      </lg-button>
+
+      <div class="tools">
+        <lg-button id="replayIntroBtn" radius="capsule" title="Kirish animatsiyasini qayta koʻrish">
+          <span id="playIc"></span><span>Intro</span>
+        </lg-button>
+        <lg-button class="ib" id="sysT" radius="capsule" aria-label="Suzuvchi vidjetni koʻrsatish" title="Suzuvchi oynani yoqish/oʻchirish"></lg-button>
+        <lg-button class="ib" id="theme" radius="capsule" aria-label="Mavzuni almashtirish" title="Yorugʻ / Qorongʻu mavzu"></lg-button>
+        <span class="wc" id="wc"></span>
+      </div>
+    </div>
+  </lg-panel>
+</div>
+
+<!-- =====================================================================
+     MAIN UI KIT COMPONENT DIRECTORY
+     ===================================================================== -->
+<main class="catalog-wrap">
+
+  <!-- Filter & Search Bar -->
+  <lg-panel radius="24" style="margin-bottom: 18px;">
+    <div class="kit-bar">
+      <div class="kit-info">
+        <h1>
+          <span>Komponentlar Katalogi</span>
+          <span class="badge ok" id="compCountBadge">10 ta blok</span>
+        </h1>
+        <p>Liquid Glassmorphism + coss.com interaktiv elementlari, holatlari va jonli animatsiyalari</p>
+      </div>
+
+      <div class="kit-controls">
+        <div class="search-pill">
+          <span id="searchIc" style="display:grid;color:var(--sub)"></span>
+          <input id="compSearch" type="text" placeholder="Komponent qidirish..." autocomplete="off">
+          <span class="kbd">/</span>
+        </div>
+
+        <lg-segmented id="catTabs" label="Kategoriyalar">
+          <button value="all" aria-checked="true">Barchasi</button>
+          <button value="inputs">Tugma & Kiritish</button>
+          <button value="overlays">coss Qatlamlar</button>
+          <button value="feedback">Bildirishnoma</button>
+          <button value="motion">Animatsiya & Grafik</button>
+        </lg-segmented>
+      </div>
+    </div>
+  </lg-panel>
+
+  <!-- ===================================================================
+       COMPONENT CARDS GRID
+       =================================================================== -->
+  <div class="kit-grid" id="kitGrid">
+
+    <!-- 1. BUTTONS & WINDOW CONTROLS -->
+    <lg-panel class="comp-card col-6" radius="28" data-cat="inputs" data-keywords="button tugma capsule window controls primary ghost icon">
+      <div class="comp-inner">
+        <div class="comp-head">
+          <div class="comp-title-group">
+            <div class="comp-eyebrow"><span>01 · coss.com & Liquid Glass</span></div>
+            <h2>Tugmalar va Kapsula Boshqaruvlar</h2>
+            <p>Shisha effektli tugmalar, asosiy (primary), ghost, xavfli va oyna kapsulasi.</p>
+          </div>
+          <lg-button class="gh" data-code="code-1" radius="capsule">Kod</lg-button>
+        </div>
+
+        <div class="comp-stage">
+          <div class="stage-label"><span>Tugma turlari (Variants)</span><span class="mono">lg-button</span></div>
+          <div class="stage-row">
+            <lg-button class="pri" radius="capsule" onclick="notify('Asosiy tugma bosildi', 'ok')">Asosiy (Primary)</lg-button>
+            <lg-button radius="capsule" onclick="notify('Shisha tugma bosildi', 'info')">Shisha (Glass)</lg-button>
+            <lg-button class="gh" radius="capsule" onclick="notify('Ghost tugma bosildi', 'info')">Ghost</lg-button>
+            <lg-button class="danger" radius="capsule" onclick="notify('Oʻchirish amali', 'del', true)">Xavfli</lg-button>
+            <lg-button radius="capsule" disabled>Noaktiv</lg-button>
+          </div>
+
+          <div class="stage-label" style="margin-top:4px"><span>Ikonkali, yuklanish holati va Oyna kapsulasi (`.wc`)</span></div>
+          <div class="stage-row">
+            <lg-button id="loadDemoBtn" radius="capsule">
+              <span id="loadDemoIc" style="display:inline-grid"></span>
+              <span id="loadDemoTxt">Yuklashni sinash</span>
+            </lg-button>
+            <lg-button class="ib" radius="capsule" aria-label="Qoʻshish" id="demoPlusBtn"></lg-button>
+            <lg-button class="ib" radius="capsule" aria-label="Kalendar" id="demoCalBtn"></lg-button>
+            <span class="wc" id="demoWC" title="LiiL kapsula oyna tugmalari"></span>
+          </div>
+        </div>
+
+        <div class="code-drawer" id="code-1"><div><div class="code-box">
+          <button class="copy-btn" data-copy="code-1">Nusxalash</button>
+          <pre>&lt;lg-button class="pri" radius="capsule"&gt;Asosiy&lt;/lg-button&gt;
+&lt;lg-button radius="capsule"&gt;Shisha&lt;/lg-button&gt;
+&lt;lg-button class="gh" radius="capsule"&gt;Ghost&lt;/lg-button&gt;
+&lt;span class="wc"&gt;...&lt;/span&gt;</pre>
+        </div></div></div>
+      </div>
+    </lg-panel>
+
+    <!-- 2. SEGMENTED CONTROLS & SWITCHES -->
+    <lg-panel class="comp-card col-6" radius="28" data-cat="inputs" data-keywords="segmented switch toggle tabs kalit tanlov">
+      <div class="comp-inner">
+        <div class="comp-head">
+          <div class="comp-title-group">
+            <div class="comp-eyebrow"><span>02 · Tanlov Elementlari</span></div>
+            <h2>Segmentli Boshqaruv va Kalitlar</h2>
+            <p>Silliq koʻchuvchi indikatorli `lg-segmented` hamda prujinali `lg-switch` kalitlari.</p>
+          </div>
+          <lg-button class="gh" data-code="code-2" radius="capsule">Kod</lg-button>
+        </div>
+
+        <div class="comp-stage">
+          <div class="stage-label">
+            <span>Segmentli tanlov (`lg-segmented`)</span>
+            <span class="badge" id="segDemoOut">Tanlangan: Kunlik</span>
+          </div>
+          <div class="stage-row">
+            <lg-segmented id="demoSeg1" label="Muddat">
+              <button value="Kunlik" aria-checked="true">Kunlik</button>
+              <button value="Haftalik">Haftalik</button>
+              <button value="Oylik">Oylik</button>
+            </lg-segmented>
+
+            <lg-segmented id="demoSeg2" label="Koʻrinish">
+              <button value="Roʻyxat" aria-checked="true">Roʻyxat</button>
+              <button value="Jadval">Jadval</button>
+            </lg-segmented>
+          </div>
+
+          <div class="stage-label" style="margin-top:4px">
+            <span>Prujinali kalitlar (`lg-switch` / `.fsw`)</span>
+            <span class="mono">cubic-bezier(.3,1.4,.5,1)</span>
+          </div>
+          <div class="stage-row" style="gap: 18px;">
+            <lg-switch id="swDemo1" checked>Jonli sinxronlash</lg-switch>
+            <lg-switch id="swDemo2">Muhim belgi</lg-switch>
+            <label class="fsw"><input type="checkbox" disabled checked><span>Qulflangan</span></label>
+          </div>
+        </div>
+
+        <div class="code-drawer" id="code-2"><div><div class="code-box">
+          <button class="copy-btn" data-copy="code-2">Nusxalash</button>
+          <pre>&lt;lg-segmented label="Muddat"&gt;
+  &lt;button value="day" aria-checked="true"&gt;Kunlik&lt;/button&gt;
+  &lt;button value="week"&gt;Haftalik&lt;/button&gt;
+&lt;/lg-segmented&gt;
+&lt;lg-switch checked&gt;Muhim&lt;/lg-switch&gt;</pre>
+        </div></div></div>
+      </div>
+    </lg-panel>
+
+    <!-- 3. FOCUS-EXPANDING INPUT & COSS FORMS -->
+    <lg-panel class="comp-card col-6" radius="28" data-cat="inputs" data-keywords="input form focus expand shake validation kiritish">
+      <div class="comp-inner">
+        <div class="comp-head">
+          <div class="comp-title-group">
+            <div class="comp-eyebrow"><span>03 · LiiL + coss.com Kiritish</span></div>
+            <h2>Kengayuvchi Kiritish va Formalar</h2>
+            <p>Fokus boʻlganda `0fr → 1fr` ochiluvchi LiiL bloki, `shake` xatolik animatsiyasi va coss inputlar.</p>
+          </div>
+          <lg-button class="gh" data-code="code-3" radius="capsule">Kod</lg-button>
+        </div>
+
+        <div class="comp-stage">
+          <div class="stage-label">
+            <span>Fokusda kengayuvchi blok (`.add` + `.ao`)</span>
+            <button class="tk" id="forceExpandBtn" style="margin:0;height:22px;font-size:11px">Ochiq ushlab turish</button>
+          </div>
+
+          <lg-panel class="add" id="kitAddPanel" radius="22">
+            <div>
+              <div class="ar" id="ar">
+                <span class="rc" id="rc"></span>
+                <input class="in0" id="newT" placeholder="Yangi element yozing (fokus qiling yoki Enter bosing)..." autocomplete="off">
+              </div>
+              <div class="ao">
+                <div>
+                  <div class="ach">
+                    <lg-segmented id="dueS" label="Muddat">
+                      <button value="n" aria-checked="true">Muddatsiz</button>
+                      <button value="t">Bugun</button>
+                      <button value="m">Ertaga</button>
+                    </lg-segmented>
+                    <lg-switch id="impS">Muhim</lg-switch>
+                    <lg-button class="pri" id="addB" radius="capsule"></lg-button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </lg-panel>
+
+          <div class="stage-label" style="margin-top:2px">
+            <span>coss.com Input guruhlari va Shake tekshiruvi</span>
+            <button class="tk" id="triggerShakeBtn" style="margin:0;height:22px;font-size:11px">Shake animatsiyasi</button>
+          </div>
+          <div class="stage-row" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="input-group">
+              <span class="ig-left" id="igMailIc"></span>
+              <input class="input" type="text" placeholder="foydalanuvchi@coss.com">
+              <span class="ig-right kbd">⌘I</span>
+            </div>
+            <input class="input" type="date" id="demoDateInput">
+          </div>
+        </div>
+
+        <div class="code-drawer" id="code-3"><div><div class="code-box">
+          <button class="copy-btn" data-copy="code-3">Nusxalash</button>
+          <pre>&lt;lg-panel class="add" radius="22"&gt;
+  &lt;div class="ar"&gt;&lt;span class="rc"&gt;+&lt;/span&gt;&lt;input class="in0" placeholder="Yangi vazifa"&gt;&lt;/div&gt;
+  &lt;div class="ao"&gt;&lt;div&gt;&lt;div class="ach"&gt;...&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/lg-panel&gt;</pre>
+        </div></div></div>
+      </div>
+    </lg-panel>
+
+    <!-- 4. INTERACTIVE TASK ITEMS & STRIKETHROUGH LIST -->
+    <lg-panel class="comp-card col-6" radius="28" data-cat="inputs" data-keywords="list checkbox task strikethrough tin leave royxat">
+      <div class="comp-inner">
+        <div class="comp-head">
+          <div class="comp-title-group">
+            <div class="comp-eyebrow"><span>04 · Interaktiv Roʻyxat</span></div>
+            <h2>Chiziluvchi Roʻyxat va Checkbox</h2>
+            <p>Bajarilganda chiziluvchi matn (`.tn`), prujinali `.cb` belgisi va elementlarni tahrirlash/oʻchirish.</p>
+          </div>
+          <lg-button class="gh" data-code="code-4" radius="capsule">Kod</lg-button>
+        </div>
+
+        <div class="comp-stage">
+          <div class="stage-row" style="justify-content:space-between">
+            <span class="stage-label" style="gap:8px">
+              <span>Holat:</span>
+              <span class="bump-num" id="sub">3 ta faol</span>
+            </span>
+            <lg-segmented id="tabs" label="Vazifalar holati">
+              <button value="active" aria-checked="true">Faol</button>
+              <button value="done">Bajarilgan</button>
+            </lg-segmented>
+          </div>
+
+          <lg-panel radius="20">
+            <ul class="list" id="list"></ul>
+          </lg-panel>
+        </div>
+
+        <div class="code-drawer" id="code-4"><div><div class="code-box">
+          <button class="copy-btn" data-copy="code-4">Nusxalash</button>
+          <pre>&lt;li class="task"&gt;
+  &lt;button class="cb" role="checkbox" aria-checked="false"&gt;...&lt;/button&gt;
+  &lt;div class="tt"&gt;&lt;span class="tn"&gt;Element nomi&lt;/span&gt;&lt;/div&gt;
+  &lt;span class="badge"&gt;Bugun&lt;/span&gt;
+&lt;/li&gt;</pre>
+        </div></div></div>
+      </div>
+    </lg-panel>
+
+    <!-- 5. COSS.COM OVERLAYS: TOP INSET SHEET, DIALOG MODAL & ACCORDION -->
+    <lg-panel class="comp-card col-6" radius="28" data-cat="overlays" data-keywords="sheet dialog modal overlay accordion coss oyna">
+      <div class="comp-inner">
+        <div class="comp-head">
+          <div class="comp-title-group">
+            <div class="comp-eyebrow"><span>05 · coss.com Qatlamlar</span></div>
+            <h2>Top Sheet, Dialog Modal va Akkordeon</h2>
+            <p>Yuqoridan tushuvchi shisha sheet (`.sheet`), modal `<dialog>` va silliq ochiluvchi akkordeon.</p>
+          </div>
+          <lg-button class="gh" data-code="code-5" radius="capsule">Kod</lg-button>
+        </div>
+
+        <div class="comp-stage">
+          <div class="stage-label"><span>Modal va Yuqori Oyna (Triggers)</span></div>
+          <div class="stage-row">
+            <lg-button class="pri" radius="capsule" id="openSheetBtn">Yuqori Sheetni ochish (coss)</lg-button>
+            <lg-button radius="capsule" id="openModalBtn">Dialog Modalni ochish</lg-button>
+            <lg-button radius="capsule" id="toggleFloatBtn">Suzuvchi Vidjet</lg-button>
+          </div>
+
+          <div class="stage-label" style="margin-top:4px"><span>coss.com Shisha Akkordeon (`.coss-acc`)</span></div>
+          <div class="coss-acc" id="demoAcc">
+            <div class="acc-item" data-open="true">
+              <button class="acc-trigger" type="button">
+                <span>Liquid Glass effekti qanday ishlaydi?</span>
+                <span class="chev" data-chev></span>
+              </button>
+              <div class="acc-body"><div><div class="acc-content">
+                <code>backdrop-filter: blur(26px) saturate(180%)</code> hamda ichki yuqori spekulyar chiziq (<code>inset 0 1px 0</code>) orqali haqiqiy optik shisha chuqurligi hosil qilinadi.
+              </div></div></div>
+            </div>
+            <div class="acc-item" data-open="false">
+              <button class="acc-trigger" type="button">
+                <span>coss.com Top Inset Sheet afzalligi nimada?</span>
+                <span class="chev" data-chev></span>
+              </button>
+              <div class="acc-body"><div><div class="acc-content">
+                Oyna ekranning yuqori chetidan <code>cubic-bezier(.2, 1, .3, 1)</code> prujina fizikasi bilan tushib keladi va ichidagi plitalar ketma-ket (<code>--i * 70ms</code>) jonlanadi.
+              </div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-drawer" id="code-5"><div><div class="code-box">
+          <button class="copy-btn" data-copy="code-5">Nusxalash</button>
+          <pre>&lt;lg-panel class="sheet on" radius="32" role="dialog"&gt;...&lt;/lg-panel&gt;
+&lt;dialog id="dlg"&gt;&lt;lg-panel radius="28"&gt;...&lt;/lg-panel&gt;&lt;/dialog&gt;</pre>
+        </div></div></div>
+      </div>
+    </lg-panel>
+
+    <!-- 6. TOASTS, CALLOUT ALERTS & BADGES -->
+    <lg-panel class="comp-card col-6" radius="28" data-cat="feedback" data-keywords="toast alert badge status notification bildirishnoma">
+      <div class="comp-inner">
+        <div class="comp-head">
+          <div class="comp-title-group">
+            <div class="comp-eyebrow"><span>06 · Bildirishnomalar va Nishonlar</span></div>
+            <h2>Toasts, Callout Xabarlar va Badges</h2>
+            <p>`lg-toast` qalqib chiquvchi xabarlar (Qaytarish / Undo tugmasi bilan) va holat nishonlari.</p>
+          </div>
+          <lg-button class="gh" data-code="code-6" radius="capsule">Kod</lg-button>
+        </div>
+
+        <div class="comp-stage">
+          <div class="stage-label"><span>Jonli Toast xabarlarini chaqirish (`#tr`)</span></div>
+          <div class="stage-row">
+            <lg-button class="ok-btn" radius="capsule" onclick="notify('Muvaffaqiyatli saqlandi!', 'ok')">Muvaffaqiyat (OK)</lg-button>
+            <lg-button radius="capsule" onclick="notify('Maydonni toʻldirish zarur', 'warn')">Ogohlantirish (Warn)</lg-button>
+            <lg-button class="danger" radius="capsule" onclick="notify('Element oʻchirildi', 'del', true)">Oʻchirish + Qaytarish</lg-button>
+          </div>
+
+          <div class="stage-label" style="margin-top:4px">
+            <span>Nishonlar (`.badge`) va `.bump` hisoblagich</span>
+            <button class="tk" id="bumpDemoBtn" style="margin:0;height:22px;font-size:11px">+1 Bump</button>
+          </div>
+          <div class="stage-row">
+            <span class="badge ok">Jonli (Pulse)</span>
+            <span class="badge red">Muddati oʻtgan</span>
+            <span class="badge warn">Kutilmoqda</span>
+            <span class="badge info">v2.4 Beta</span>
+            <span class="badge">Standart</span>
+            <span class="bump-num" id="bumpDemoVal">42</span>
+          </div>
+
+          <div class="coss-alert ok">
+            <span class="al-ic" id="alertOkIc"></span>
+            <div><b>Tizim tayyor:</b> Barcha Liquid Glass komponentlari va fallback uslublari faol holatda.</div>
+          </div>
+        </div>
+
+        <div class="code-drawer" id="code-6"><div><div class="code-box">
+          <button class="copy-btn" data-copy="code-6">Nusxalash</button>
+          <pre>&lt;lg-toast data-k="ok" icon="check"&gt;Muvaffaqiyatli saqlandi!&lt;/lg-toast&gt;
+&lt;span class="badge ok"&gt;Jonli&lt;/span&gt;
+&lt;span class="badge red"&gt;Muddati oʻtgan&lt;/span&gt;</pre>
+        </div></div></div>
+      </div>
+    </lg-panel>
+
+    <!-- 7. SPARKLINE METRIC CARDS & PROGRESS SLIDERS -->
+    <lg-panel class="comp-card col-8" radius="28" data-cat="motion" data-keywords="sparkline progress cpu ram gpu chart grafik">
+      <div class="comp-inner">
+        <div class="comp-head">
+          <div class="comp-title-group">
+            <div class="comp-eyebrow"><span>07 · Jonli Koʻrsatkich Kartalari</span></div>
+            <h2>SVG Sparkline va Progress Kartalari</h2>
+            <p>Qiymatga qarab rangini oʻzgartiruvchi (`<70%` normal, `70-84%` `.warn`, `≥85%` `.hot`) jonli kartalar.</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <lg-switch id="simToggle" checked>Avto-simulyatsiya</lg-switch>
+            <lg-button class="gh" data-code="code-7" radius="capsule">Kod</lg-button>
+          </div>
+        </div>
+
+        <div class="comp-stage">
+          <div class="mi-grid" id="cards"></div>
+
+          <div class="stage-row" style="justify-content:space-between;padding-top:4px">
+            <span class="stage-label">Qoʻlda qiymat berib sinash (CPU %):</span>
+            <input type="range" class="coss-range" id="cpuSlider" min="5" max="98" value="35" style="max-width:260px">
+          </div>
+        </div>
+
+        <div class="code-drawer" id="code-7"><div><div class="code-box">
+          <button class="copy-btn" data-copy="code-7">Nusxalash</button>
+          <pre>&lt;lg-panel class="m warn" radius="20"&gt;
+  &lt;div class="in"&gt;
+    &lt;div class="r"&gt;&lt;span class="l"&gt;CPU&lt;/span&gt;&lt;span class="v"&gt;76%&lt;/span&gt;&lt;/div&gt;
+    &lt;svg class="spark" viewBox="0 0 200 44"&gt;...&lt;/svg&gt;
+    &lt;div class="progress"&gt;&lt;i style="width:76%"&gt;&lt;/i&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/lg-panel&gt;</pre>
+        </div></div></div>
+      </div>
+    </lg-panel>
+
+    <!-- 8. GLASSMORPHISM LIVE CUSTOMIZER & TOKENS -->
+    <lg-panel class="comp-card col-4" radius="28" data-cat="overlays" data-keywords="tokens blur glass customizer sozlamalar">
+      <div class="comp-inner">
+        <div class="comp-head">
+          <div class="comp-title-group">
+            <div class="comp-eyebrow"><span>08 · Dizayn Tokenlari</span></div>
+            <h2>Shisha Sozlagich</h2>
+            <p>UI Kit xiralik (`--blur`) va toʻyinganlik (`--sat`) darajasini jonli oʻzgartiring.</p>
+          </div>
+          <lg-button class="gh" id="resetGlassBtn" radius="capsule">Tiklash</lg-button>
+        </div>
+
+        <div class="comp-stage">
+          <label class="coss-field">
+            <div style="display:flex;justify-content:space-between">
+              <span>Xiralik (Backdrop Blur)</span>
+              <span class="mono" id="blurVal">26px</span>
+            </div>
+            <input type="range" class="coss-range" id="blurRange" min="0" max="48" value="26">
+          </label>
+
+          <label class="coss-field">
+            <div style="display:flex;justify-content:space-between">
+              <span>Toʻyinganlik (Saturate)</span>
+              <span class="mono" id="satVal">180%</span>
+            </div>
+            <input type="range" class="coss-range" id="satRange" min="100" max="260" value="180">
+          </label>
+
+          <div class="stage-label" style="margin-top:4px"><span>Rang tokenlari (`:root`)</span></div>
+          <div class="stage-row" style="gap:8px">
+            <span class="badge" style="background:var(--fg);color:var(--bg)">--fg</span>
+            <span class="badge ok">--ok</span>
+            <span class="badge warn">--warn</span>
+            <span class="badge red">--err</span>
+            <span class="badge info">--info</span>
+          </div>
+        </div>
+      </div>
+    </lg-panel>
+
+    <!-- 9. ANIMATION LAB (ALL KEYFRAMES FROM LiiL.html) -->
+    <lg-panel class="comp-card col-6" radius="28" data-cat="motion" data-keywords="animation keyframes rise drop tin pop dlg shake bump bob wipe">
+      <div class="comp-inner">
+        <div class="comp-head">
+          <div class="comp-title-group">
+            <div class="comp-eyebrow"><span>09 · LiiL Harakatlar Tizimi</span></div>
+            <h2>Animatsiyalar Laboratoriyasi</h2>
+            <p>Fayldagi barcha `@keyframes` animatsiyalarini bosib, jonli sahnada sinab koʻring.</p>
+          </div>
+          <lg-button class="gh" data-code="code-9" radius="capsule">Kod</lg-button>
+        </div>
+
+        <div class="comp-stage">
+          <div class="anim-stage">
+            <div class="anim-actor" id="animActor">
+              <img class="logo" alt="" style="width:24px;height:24px">
+              <span id="animActorText">LiiL Glass Element</span>
+              <span class="badge ok">Active</span>
+            </div>
+            <span class="anim-meta mono" id="animMeta">animation: rise .6s cubic-bezier(.2,.8,.2,1)</span>
+          </div>
+
+          <div class="stage-row" id="animButtons">
+            <lg-button radius="capsule" data-anim="rise .6s cubic-bezier(.2,.8,.2,1)">rise</lg-button>
+            <lg-button radius="capsule" data-anim="drop .55s cubic-bezier(.2,.9,.3,1)">drop</lg-button>
+            <lg-button radius="capsule" data-anim="tin .45s cubic-bezier(.2,.8,.2,1)">tin</lg-button>
+            <lg-button radius="capsule" data-anim="pop .45s ease">pop</lg-button>
+            <lg-button radius="capsule" data-anim="dlg .4s cubic-bezier(.2,.9,.3,1)">dlg</lg-button>
+            <lg-button radius="capsule" data-anim="shake .4s ease">shake</lg-button>
+            <lg-button radius="capsule" data-anim="bump .4s ease">bump</lg-button>
+            <lg-button radius="capsule" data-anim="wipe .8s cubic-bezier(.3,.7,.2,1)">wipe</lg-button>
+            <lg-button radius="capsule" data-anim="tdrop .5s cubic-bezier(.2,1.2,.3,1)">tdrop</lg-button>
+          </div>
+        </div>
+
+        <div class="code-drawer" id="code-9"><div><div class="code-box">
+          <button class="copy-btn" data-copy="code-9">Nusxalash</button>
+          <pre>@keyframes rise { from { opacity:0; translate:0 20px; scale:.985 } }
+@keyframes shake { 20%,60% { translate:-6px } 40%,80% { translate:6px } }
+@keyframes wipe { from { clip-path:inset(0 100% 0 0); filter:blur(10px) } }</pre>
+        </div></div></div>
+      </div>
+    </lg-panel>
+
+    <!-- 10. COSS.COM DATA TABLE & EMPTY STATE -->
+    <lg-panel class="comp-card col-6" radius="28" data-cat="feedback" data-keywords="table empty state jadval coss">
+      <div class="comp-inner">
+        <div class="comp-head">
+          <div class="comp-title-group">
+            <div class="comp-eyebrow"><span>10 · Maʼlumot va Boʻsh Holat</span></div>
+            <h2>coss.com Jadval va Empty State</h2>
+            <p>Shaffof shisha jadval (`.coss-table`) hamda suzuvchi ikonkali boʻsh holat (`@keyframes bob`).</p>
+          </div>
+          <lg-segmented id="tableViewToggle" label="Koʻrinish">
+            <button value="table" aria-checked="true">Jadval</button>
+            <button value="empty">Empty State</button>
+          </lg-segmented>
+        </div>
+
+        <div class="comp-stage">
+          <div id="tableDemoWrap" class="coss-table-wrap">
+            <table class="coss-table">
+              <thead>
+                <tr>
+                  <th>Komponent</th>
+                  <th>Teg</th>
+                  <th>Animatsiya</th>
+                  <th>Holat</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b>Top Inset Sheet</b></td>
+                  <td><span class="mono">.sheet</span></td>
+                  <td><span class="mono">tin + bezier</span></td>
+                  <td><span class="badge ok">Tayyor</span></td>
+                </tr>
+                <tr>
+                  <td><b>Focus Add Block</b></td>
+                  <td><span class="mono">.add / .ao</span></td>
+                  <td><span class="mono">0fr → 1fr</span></td>
+                  <td><span class="badge ok">Tayyor</span></td>
+                </tr>
+                <tr>
+                  <td><b>Liquid Toast</b></td>
+                  <td><span class="mono">lg-toast</span></td>
+                  <td><span class="mono">tdrop / tbye</span></td>
+                  <td><span class="badge info">Interaktiv</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div id="emptyDemoWrap" class="empty" style="display:none">
+            <div>
+              <div class="ic" id="emptyDemoIc"></div>
+              <b>Hech qanday maʼlumot topilmadi</b>
+              Yangi element qoʻshing yoki qidiruv filtrini tozalang.
+            </div>
+          </div>
+        </div>
+      </div>
+    </lg-panel>
+
+  </div>
+</main>
+
+<!-- =====================================================================
+     DRAGGABLE FLOATING GLASS WIDGET (From LiiL.html, hidden by default)
+     ===================================================================== -->
+<lg-panel class="mon hide" id="mon" radius="28">
+  <div class="stack">
+    <lg-panel id="mh" radius="22">
+      <div class="mrow" id="mrow">
+        <div class="t">
+          <span class="mt">Suzuvchi Oyna <span class="badge ok" id="live">Jonli</span></span>
+          <span class="mv" id="mv"></span>
+        </div>
+        <span class="wc sm" id="mwc"></span>
+      </div>
+    </lg-panel>
+    <div class="mb">
+      <div>
+        <div style="padding:10px 12px;display:grid;gap:8px">
+          <p style="font-size:12.5px;color:var(--sub)">
+            Ushbu oynani sarlavhasidan ushlab ekranning istalgan joyiga surishingiz, kichraytirishingiz (minimize) yoki kengaytirishingiz mumkin.
+          </p>
+          <div style="display:flex;gap:8px">
+            <lg-button class="pri" radius="capsule" onclick="notify('Suzuvchi oynadan xabar!', 'ok')">Test Toast</lg-button>
+            <lg-button radius="capsule" id="monModeBtn">Kattalashtirish</lg-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</lg-panel>
+
+<!-- =====================================================================
+     coss.com TOP INSET SHEET OVERLAY (From LiiL.html)
+     ===================================================================== -->
+<div class="ov" id="ov"></div>
+<lg-panel class="sheet" id="sheet" radius="32" role="dialog" aria-modal="true" aria-labelledby="sT" aria-hidden="true">
+  <div class="stack">
+    <div class="sh-h">
+      <div>
+        <h2 id="sT">UI Kit Boʻlimlari (coss.com Top Sheet)</h2>
+        <p>Qaysi turdagi komponentlarni filtrlashni xohlaysiz?</p>
+      </div>
+      <lg-button class="ib gh" id="sX" radius="capsule" aria-label="Yopish"></lg-button>
+    </div>
+    <div class="sh-p" id="tiles"></div>
+  </div>
+</lg-panel>
+
+<!-- =====================================================================
+     coss.com GLASS DIALOG MODAL (From LiiL.html)
+     ===================================================================== -->
+<dialog id="dlg">
+  <lg-panel radius="28">
+    <div class="dp">
+      <h3 id="dlgTitle">Elementni tahrirlash (Glass Dialog)</h3>
+      <label>Nomi
+        <input class="input" id="eT" value="Liquid Glass komponenti" autocomplete="off">
+      </label>
+      <label>Muddat
+        <input class="input" id="eD" type="date">
+      </label>
+      <lg-switch id="eI" checked>Muhim element</lg-switch>
+      <div class="df">
+        <lg-button class="gh" data-d="del" radius="capsule">Oʻchirish</lg-button>
+        <lg-button data-d="cancel" radius="capsule">Bekor qilish</lg-button>
+        <lg-button class="pri" data-d="save" radius="capsule">Saqlash</lg-button>
+      </div>
+    </div>
+  </lg-panel>
+</dialog>
+
+<!-- =====================================================================
+     DYNAMIC TOAST REGION
+     ===================================================================== -->
+<div id="tr" aria-live="polite"></div>
+
+<script>
+/* =========================================================================
+   1. LOGO & SVG ICONS (From LiiL.html)
+   ========================================================================= */
+const LOGO="data:image/webp;base64,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";
+document.querySelectorAll('.logo').forEach(i => i.src = LOGO);
+
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const P_ = {
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  trash: '<path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  moon: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
+  inbox: '<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.5 5h13L22 12v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6z"/>',
+  calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  flag: '<path d="M4 22V4M4 4h13l-2 4 2 4H4"/>',
+  cpu: '<rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>',
+  ram: '<rect x="2" y="7" width="20" height="10" rx="1.5"/><path d="M6 17v3M10 17v3M14 17v3M18 17v3M6 11h2M11 11h2M16 11h2"/>',
+  gpu: '<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>',
+  panel: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 15h18"/>',
+  chev: '<path d="m6 9 6 6 6-6"/>',
+  x: '<path d="M18 6 6 18M6 6l12 12"/>',
+  dn: '<path d="m7 10 5 5 5-5"/>',
+  ex: '<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>',
+  search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  play: '<polygon points="6 3 20 12 6 21 6 3"/>',
+  spin: '<path d="M21 12a9 9 0 1 1-6.2-8.56"/>',
+  mail: '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>'
+};
+const ic = (n, s = 16, w = 2) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P_[n]}</svg>`;
+
+const day = (n = 0) => {
+  const d = new Date();
+  d.setDate(d.getDate() + n);
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+};
+$('#demoDateInput').value = day(0);
+$('#eD').value = day(1);
+
+/* Helpers for liquidglass.dev components (upgraded or fallback) */
+const setIcon = (b, h) => (b.querySelector('.lg-button__label') || b).innerHTML = h;
+const segSet = (e, v) => {
+  if (e.select) e.value = v;
+  else e.querySelectorAll('button').forEach(b => b.setAttribute('aria-checked', b.value === v));
+};
+const segVal = e => e.select ? e.value : e.querySelector('[aria-checked="true"]')?.value;
+const swGet = s => s.input ? s.input.checked : (s.querySelector('input') ? s.querySelector('input').checked : s.hasAttribute('checked'));
+const swSet = (s, v) => {
+  if (s.input) s.checked = v;
+  else {
+    const i = s.querySelector('input');
+    if (i) i.checked = v;
+    else s.toggleAttribute('checked', v);
+  }
+};
+
+/* Populate static icons */
+$('#chev').innerHTML = ic('chev', 14);
+$('#rc').innerHTML = ic('plus', 14, 2.6);
+$('#searchIc').innerHTML = ic('search', 14, 2.2);
+$('#playIc').innerHTML = ic('play', 12, 2.4);
+$('#igMailIc').innerHTML = ic('mail', 15, 2);
+$('#alertOkIc').innerHTML = ic('check', 16, 2.6);
+$('#emptyDemoIc').innerHTML = ic('inbox', 20, 2);
+$$('[data-chev]').forEach(el => el.innerHTML = ic('chev', 15));
+setIcon($('#sX'), ic('x', 16));
+setIcon($('#sysT'), ic('panel'));
+setIcon($('#addB'), ic('plus', 14, 2.6) + 'Qoʻshish');
+setIcon($('#demoPlusBtn'), ic('plus', 15, 2.5));
+setIcon($('#demoCalBtn'), ic('calendar', 15, 2));
+$('#loadDemoIc').innerHTML = ic('check', 14, 2.5);
+
+/* =========================================================================
+   2. THEME & WINDOW CONTROLS
+   ========================================================================= */
+let currentTheme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+const setTheme = m => {
+  currentTheme = m;
+  document.documentElement.dataset.theme = m;
+  setIcon($('#theme'), ic(m === 'dark' ? 'sun' : 'moon'));
+};
+setTheme(currentTheme);
+$('#theme').onclick = () => setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+
+const mkWC = (el, f, s = 14) => {
+  el.innerHTML = `<button data-i="0" aria-label="Kichraytirish">${ic('dn', s, 2.4)}</button><button data-i="1" aria-label="Kengaytirish">${ic('ex', s - 2, 2.2)}</button><i></i><button data-i="2" aria-label="Yopish">${ic('x', s, 2.4)}</button>`;
+  el.onclick = e => {
+    const b = e.target.closest('button');
+    if (b) f[+b.dataset.i]();
+  };
+};
+mkWC($('#wc'), [
+  () => notify('Oyna kichraytirish (Minimize)', 'info'),
+  () => notify('Oyna kengaytirish (Maximize)', 'info'),
+  () => notify('Oyna yopish tugmasi', 'warn')
+]);
+mkWC($('#demoWC'), [
+  () => notify('Minimize bosildi', 'ok'),
+  () => notify('Maximize bosildi', 'ok'),
+  () => notify('Close bosildi', 'del')
+]);
+
+/* =========================================================================
+   3. TOAST NOTIFICATIONS (#tr)
+   ========================================================================= */
+let nt, trash = null;
+function notify(m, k = 'ok', undo = false) {
+  const r = $('#tr');
+  r.innerHTML = '';
+  const t = document.createElement('lg-toast');
+  t.setAttribute('icon', k === 'ok' ? 'check' : 'alert');
+  t.dataset.k = k;
+  t.append(m);
+  if (undo) {
+    const b = document.createElement('button');
+    b.className = 'tk';
+    b.textContent = 'Qaytarish';
+    b.onclick = () => {
+      if (trash) {
+        tasks.splice(trash[1], 0, trash[0]);
+        trash = null;
+        renderMain();
+      }
+      t.remove();
+      notify('Amal qaytarildi', 'ok');
+    };
+    t.append(b);
+  }
+  r.append(t);
+  clearTimeout(nt);
+  nt = setTimeout(() => {
+    t.classList.add('bye');
+    setTimeout(() => t.remove(), 360);
+  }, undo ? 4800 : 2600);
+}
+window.notify = notify;
+
+/* =========================================================================
+   4. CATEGORY FILTER, TOP SHEET & SEARCH
+   ========================================================================= */
+const CATS = {
+  all: ['Barcha komponentlar', 'inbox'],
+  inputs: ['Tugma & Kiritish', 'plus'],
+  overlays: ['coss Qatlamlar', 'panel'],
+  feedback: ['Bildirishnomalar', 'flag'],
+  motion: ['Animatsiya & Grafik', 'cpu']
+};
+let activeCat = 'all';
+
+function filterCatalog(cat = activeCat, q = $('#compSearch').value.trim().toLowerCase()) {
+  activeCat = cat;
+  $('#menuL').textContent = CATS[cat]?.[0] || 'Barcha komponentlar';
+  segSet($('#catTabs'), cat);
+  let visible = 0;
+  $$('.comp-card').forEach(card => {
+    const matchCat = cat === 'all' || card.dataset.cat === cat;
+    const text = (card.textContent + ' ' + (card.dataset.keywords || '')).toLowerCase();
+    const matchQ = !q || text.includes(q);
+    const show = matchCat && matchQ;
+    card.classList.toggle('hidden-card', !show);
+    if (show) visible++;
+  });
+  const badge = $('#compCountBadge');
+  badge.textContent = visible + ' ta blok';
+}
+
+$('#catTabs').addEventListener('change', e => {
+  const v = e.detail?.value || segVal($('#catTabs'));
+  if (v) filterCatalog(v);
+});
+$('#compSearch').addEventListener('input', () => filterCatalog(activeCat));
+addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+    e.preventDefault();
+    $('#compSearch').focus();
+  }
+  if (e.key === 'Escape') sheet(false);
+});
+
+/* coss.com Top Inset Sheet */
+function sheet(open) {
+  if (open === $('#sheet').classList.contains('on')) return;
+  if (open) {
+    const countCat = k => k === 'all' ? $$('.comp-card').length : $$('.comp-card').filter(c => c.dataset.cat === k).length;
+    $('#tiles').innerHTML = Object.entries(CATS).map(([k, [n, i]], x) =>
+      `<lg-button class="tile ${activeCat === k ? 'cur' : ''}" style="--i:${x}" data-v="${k}" radius="20">
+        <span class="tin">${ic(i, 18)}<b>${countCat(k)}</b></span>
+        <span class="tx">${n}</span>
+      </lg-button>`
+    ).join('');
+  }
+  $('#sheet').classList.toggle('on', open);
+  $('#ov').classList.toggle('on', open);
+  $('#sheet').setAttribute('aria-hidden', !open);
+  $('#menuB').setAttribute('aria-expanded', open);
+}
+$('#menuB').onclick = () => sheet(true);
+$('#openSheetBtn').onclick = () => sheet(true);
+$('#sX').onclick = () => sheet(false);
+$('#ov').onclick = () => sheet(false);
+$('#tiles').onclick = e => {
+  const b = e.target.closest('[data-v]');
+  if (!b) return;
+  filterCatalog(b.dataset.v);
+  sheet(false);
+  notify(CATS[b.dataset.v][0] + ' tanlandi', 'ok');
+};
+
+/* =========================================================================
+   5. INTERACTIVE COMPONENT DEMOS (Buttons, Segmented, Tasks, Accordion, etc.)
+   ========================================================================= */
+
+/* Code drawer toggles & Copy button */
+$$('[data-code]').forEach(btn => {
+  btn.onclick = () => {
+    const dr = $('#' + btn.dataset.code);
+    if (dr) dr.classList.toggle('open');
+  };
+});
+$$('[data-copy]').forEach(btn => {
+  btn.onclick = () => {
+    const pre = $('#' + btn.dataset.copy + ' pre');
+    if (!pre) return;
+    const ta = document.createElement('textarea');
+    ta.value = pre.textContent;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+    notify('Kod buferga nusxalandi!', 'ok');
+  };
+});
+
+/* Loading button demo */
+let isLoadDemo = false;
+$('#loadDemoBtn').onclick = () => {
+  if (isLoadDemo) return;
+  isLoadDemo = true;
+  $('#loadDemoIc').innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="animation:spin .8s linear infinite">${P_.spin}</svg>`;
+  $('#loadDemoTxt').textContent = 'Yuklanmoqda...';
+  setTimeout(() => {
+    isLoadDemo = false;
+    $('#loadDemoIc').innerHTML = ic('check', 14, 2.5);
+    $('#loadDemoTxt').textContent = 'Tayyor!';
+    notify('Yuklash yakunlandi', 'ok');
+  }, 1200);
+};
+
+/* Segmented demo output */
+$('#demoSeg1').addEventListener('change', e => {
+  const v = e.detail?.value || segVal($('#demoSeg1'));
+  $('#segDemoOut').textContent = 'Tanlangan: ' + v;
+});
+
+/* Force-open Focus Expand input & Shake trigger */
+$('#forceExpandBtn').onclick = () => {
+  $('#kitAddPanel').classList.toggle('force-open');
+  $('#forceExpandBtn').textContent = $('#kitAddPanel').classList.contains('force-open') ? 'Yopish' : 'Ochiq ushlab turish';
+};
+$('#triggerShakeBtn').onclick = () => {
+  const a = $('#ar');
+  a.classList.remove('shake');
+  void a.offsetWidth;
+  a.classList.add('shake');
+  notify('Maydon boʻsh: shake animatsiyasi!', 'warn');
+};
+
+/* Interactive Checklist & Strikethrough (From LiiL.html) */
+let tasks = [
+  { id: 1, t: 'Liquid Glass panellarni sozlash', done: false, pri: 'high', due: day(0) },
+  { id: 2, t: 'coss.com Top Sheet animatsiyasini tekshirish', done: false, pri: 'low', due: day(1) },
+  { id: 3, t: 'Dark va Light mavzularni sinash', done: false, pri: 'low', due: day(0) },
+  { id: 4, t: 'Kapsula oyna tugmalarini yaratish', done: true, pri: 'low', due: day(-1) }
+];
+let tab = 'active', editId = null, fresh = null, nid = 100;
+const dl = d => d === day(0) ? 'Bugun' : d === day(1) ? 'Ertaga' : d < day(0) ? 'Muddati oʻtgan' : d.slice(8) + '.' + d.slice(5, 7);
+
+function renderMain(swap) {
+  const activeCount = tasks.filter(t => !t.done).length;
+  const s = $('#sub'), txt = activeCount + ' ta faol';
+  if (s.textContent !== txt) {
+    s.textContent = txt;
+    s.classList.remove('bump');
+    void s.offsetWidth;
+    s.classList.add('bump');
+  }
+  const list = tasks.filter(t => (tab === 'done') === t.done);
+  $('#list').className = 'list' + (swap ? ' swap' : '');
+  $('#list').innerHTML = list.length ? list.map((t, i) => `
+    <li class="task ${t.done ? 'done' : ''} ${t.id === fresh ? 'in' : ''}" data-id="${t.id}" style="--i:${i}">
+      <button class="cb" role="checkbox" aria-checked="${t.done}" aria-label="Bajarildi" data-a="tog">${ic('check', 13, 3.2)}</button>
+      <div class="tt" data-a="edit"><span class="tn">${esc(t.t)}</span></div>
+      ${t.pri === 'high' ? `<span class="flag" title="Muhim">${ic('flag', 14)}</span>` : ''}
+      ${t.due ? `<span class="badge ${!t.done && t.due < day(0) ? 'red' : ''}">${dl(t.due)}</span>` : ''}
+      <button class="rb" data-a="del" aria-label="Oʻchirish">${ic('trash', 15)}</button>
+    </li>`).join('')
+    : `<li class="empty"><div><div class="ic">${ic('check', 20, 2.4)}</div><b>${tab === 'done' ? 'Bajarilgan element yoʻq' : 'Hammasi bajarildi'}</b>Yuqoridagi kiritish blokidan yangi qoʻshing.</div></li>`;
+  fresh = null;
+}
+
+const dueOf = () => ({ n: '', t: day(0), m: day(1) }[segVal($('#dueS'))] || '');
+function add() {
+  const v = $('#newT').value.trim();
+  if (!v) {
+    const a = $('#ar');
+    a.classList.remove('shake');
+    void a.offsetWidth;
+    a.classList.add('shake');
+    notify('Element nomini yozing', 'warn');
+    $('#newT').focus();
+    return;
+  }
+  if (tab !== 'active') { tab = 'active'; segSet($('#tabs'), 'active'); }
+  fresh = ++nid;
+  tasks.unshift({ id: fresh, t: v, done: false, pri: swGet($('#impS')) ? 'high' : 'low', due: dueOf() });
+  $('#newT').value = '';
+  renderMain();
+  notify('Yangi element qoʻshildi', 'ok');
+}
+$('#newT').onkeydown = e => {
+  if (e.key === 'Enter') { e.preventDefault(); add(); }
+  if (e.key === 'Escape') { e.target.value = ''; e.target.blur(); }
+};
+$('#addB').onclick = add;
+
+function del(id) {
+  const i = tasks.findIndex(t => t.id === id);
+  if (i === -1) return;
+  trash = [tasks[i], i];
+  tasks.splice(i, 1);
+  renderMain();
+  notify('Element oʻchirildi', 'del', true);
+}
+$('#list').onclick = e => {
+  const li = e.target.closest('.task');
+  if (!li || li.dataset.b) return;
+  const id = +li.dataset.id, a = e.target.closest('[data-a]')?.dataset.a, t = tasks.find(x => x.id === id);
+  if (!t) return;
+  if (a === 'tog') {
+    li.dataset.b = 1;
+    t.done = !t.done;
+    li.classList.toggle('done', t.done);
+    e.target.closest('.cb').setAttribute('aria-checked', t.done);
+    setTimeout(() => li.classList.add('leave'), 380);
+    setTimeout(() => { renderMain(); if (t.done) notify('Bajarildi deb belgilandi', 'ok'); }, 640);
+  } else if (a === 'del') {
+    li.dataset.b = 1;
+    li.classList.add('leave');
+    setTimeout(() => del(id), 250);
+  } else if (a === 'edit') {
+    openEdit(id);
+  }
+};
+$('#tabs').addEventListener('change', e => {
+  const v = e.detail?.value || segVal($('#tabs'));
+  if (v && v !== tab) { tab = v; renderMain(true); }
+});
+
+/* Dialog Modal */
+function openEdit(id) {
+  const t = tasks.find(x => x.id === id);
+  editId = id;
+  if (t) {
+    $('#eT').value = t.t;
+    $('#eD').value = t.due || day(0);
+    swSet($('#eI'), t.pri === 'high');
+  }
+  $('#dlg').showModal();
+}
+$('#openModalBtn').onclick = () => {
+  editId = tasks[0]?.id || null;
+  $('#dlg').showModal();
+};
+$('#dlg').onclick = e => {
+  const a = e.target.closest('[data-d]')?.dataset.d;
+  if (!a) { if (e.target === $('#dlg')) $('#dlg').close(); return; }
+  if (a === 'save') {
+    const t = tasks.find(x => x.id === editId);
+    if (t) {
+      t.t = $('#eT').value.trim() || t.t;
+      t.due = $('#eD').value;
+      t.pri = swGet($('#eI')) ? 'high' : 'low';
+      renderMain();
+    }
+    notify('Oʻzgarishlar saqlandi', 'ok');
+  }
+  if (a === 'del' && editId) {
+    $('#dlg').close();
+    del(editId);
+    return;
+  }
+  $('#dlg').close();
+};
+
+/* Accordion */
+$('#demoAcc').onclick = e => {
+  const tr = e.target.closest('.acc-trigger');
+  if (!tr) return;
+  const item = tr.closest('.acc-item');
+  const isOpen = item.dataset.open === 'true';
+  item.dataset.open = !isOpen;
+};
+
+/* Bump Counter Demo */
+let bumpCnt = 42;
+$('#bumpDemoBtn').onclick = () => {
+  bumpCnt++;
+  const el = $('#bumpDemoVal');
+  el.textContent = bumpCnt;
+  el.classList.remove('bump');
+  void el.offsetWidth;
+  el.classList.add('bump');
+};
+
+/* Table vs Empty State Toggle */
+$('#tableViewToggle').addEventListener('change', e => {
+  const v = e.detail?.value || segVal($('#tableViewToggle'));
+  $('#tableDemoWrap').style.display = v === 'table' ? 'block' : 'none';
+  $('#emptyDemoWrap').style.display = v === 'empty' ? 'grid' : 'none';
+});
+
+/* Glass Customizer Sliders */
+$('#blurRange').oninput = e => {
+  const v = e.target.value + 'px';
+  document.documentElement.style.setProperty('--blur', v);
+  $('#blurVal').textContent = v;
+};
+$('#satRange').oninput = e => {
+  const v = e.target.value + '%';
+  document.documentElement.style.setProperty('--sat', v);
+  $('#satVal').textContent = v;
+};
+$('#resetGlassBtn').onclick = () => {
+  document.documentElement.style.setProperty('--blur', '26px');
+  document.documentElement.style.setProperty('--sat', '180%');
+  $('#blurRange').value = 26;
+  $('#satRange').value = 180;
+  $('#blurVal').textContent = '26px';
+  $('#satVal').textContent = '180%';
+  notify('Standart shisha tokenlari tiklandi', 'ok');
+};
+
+/* Animation Lab */
+$('#animButtons').onclick = e => {
+  const b = e.target.closest('[data-anim]');
+  if (!b) return;
+  const anim = b.dataset.anim;
+  const actor = $('#animActor');
+  actor.style.animation = 'none';
+  void actor.offsetWidth;
+  actor.style.animation = anim;
+  $('#animMeta').textContent = 'animation: ' + anim;
+};
+
+/* Intro Curtain Replay */
+function playIntro(initial = false) {
+  let intro = $('#intro');
+  if (!intro) {
+    intro = document.createElement('div');
+    intro.className = 'intro';
+    intro.id = 'intro';
+    intro.innerHTML = `<div class="ig"><img class="logo" src="${LOGO}" alt="LiiL"><div class="wm"><span>L</span><span>i</span><span>i</span><span>L</span><em>UI Kit</em></div><div class="bar"><i></i></div></div>`;
+    document.body.appendChild(intro);
+  }
+  intro.classList.remove('out');
+  setTimeout(() => intro.classList.add('out'), initial ? 1600 : 1750);
+}
+$('#replayIntroBtn').onclick = () => playIntro(false);
+playIntro(true);
+
+/* =========================================================================
+   6. SPARKLINE METRIC CARDS & FLOATING DRAGGABLE WIDGET (.mon)
+   ========================================================================= */
+const H = { cpu: [], ram: [], gpu: [] }, MK = [['cpu', 'CPU'], ['ram', 'RAM'], ['gpu', 'GPU']];
+const cur = { cpu: 34, ram: 74, gpu: 88, ramTotal: 16, ramUsed: 11.8, cores: 8, gpuName: 'Normal / Warn / Hot' };
+$('#cards').innerHTML = MK.map(([k, n]) => `
+  <lg-panel class="m" id="m-${k}" radius="20">
+    <div class="in">
+      <div class="r"><span class="l">${ic(k, 15)}${n}</span><span class="v">0%</span></div>
+      <div class="s"></div>
+      <svg class="spark" viewBox="0 0 200 44" preserveAspectRatio="none" aria-hidden="true">
+        <path class="a" fill="currentColor" opacity=".14"/>
+        <path class="ln" fill="none" stroke="currentColor" stroke-width="1.7" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
+      </svg>
+      <div class="progress"><i></i></div>
+    </div>
+  </lg-panel>`).join('');
+
+function spark(a) {
+  const n = 36, w = 200, h = 44;
+  if (a.length < 2) return ['', ''];
+  const p = a.map((v, i) => [((n - a.length + i) * w / (n - 1)).toFixed(1), (h - 3 - v / 100 * (h - 6)).toFixed(1)]);
+  const l = 'M' + p.map(x => x.join(' ')).join('L');
+  return [l, l + `L${w} ${h}L${p[0][0]} ${h}Z`];
+}
+function updateSys() {
+  const sub = {
+    cpu: cur.cpu >= 85 ? 'Hot (≥85%)' : cur.cpu >= 70 ? 'Warn (70-84%)' : 'Normal (<70%)',
+    ram: cur.ram >= 85 ? 'Hot (≥85%)' : cur.ram >= 70 ? 'Warn (70-84%)' : 'Normal (<70%)',
+    gpu: cur.gpu >= 85 ? 'Hot (≥85%)' : cur.gpu >= 70 ? 'Warn (70-84%)' : 'Normal (<70%)'
+  };
+  MK.forEach(([k]) => {
+    const el = $('#m-' + k), v = Math.round(cur[k]), [l, a] = spark(H[k]);
+    el.classList.toggle('warn', v >= 70 && v < 85);
+    el.classList.toggle('hot', v >= 85);
+    el.querySelector('.v').textContent = v + '%';
+    el.querySelector('.s').textContent = sub[k];
+    el.querySelector('.progress i').style.width = v + '%';
+    el.querySelector('.ln').setAttribute('d', l);
+    el.querySelector('.a').setAttribute('d', a);
+  });
+  $('#mv').innerHTML = MK.map(([k, n]) => `<span>${n} ${Math.round(cur[k])}%</span>`).join('');
+}
+function push() {
+  ['cpu', 'ram', 'gpu'].forEach(k => {
+    H[k].push(cur[k]);
+    if (H[k].length > 36) H[k].shift();
+  });
+  updateSys();
+}
+const rw = (v, lo, hi, s) => Math.max(lo, Math.min(hi, v + (Math.random() - .5) * s));
+let simActive = true;
+const tick = () => {
+  if (!simActive) return;
+  cur.cpu = rw(cur.cpu, 12, 65, 16);
+  cur.ram = rw(cur.ram, 71, 83, 5);
+  cur.gpu = rw(cur.gpu, 85, 96, 5);
+  $('#cpuSlider').value = Math.round(cur.cpu);
+  push();
+};
+for (let i = 0; i < 24; i++) tick();
+setInterval(tick, 1100);
+
+$('#simToggle').onclick = () => {
+  setTimeout(() => { simActive = swGet($('#simToggle')); }, 20);
+};
+$('#cpuSlider').oninput = e => {
+  simActive = false;
+  swSet($('#simToggle'), false);
+  cur.cpu = +e.target.value;
+  push();
+};
+
+/* Floating Draggable Monitor Widget */
+const mon = $('#mon');
+let drag = null, sysOpen = false;
+function place(x, y) {
+  x = Math.max(8, Math.min(innerWidth - mon.offsetWidth - 8, x));
+  y = Math.max(68, Math.min(innerHeight - mon.offsetHeight - 8, y));
+  mon.style.left = x + 'px';
+  mon.style.top = y + 'px';
+}
+const mrow = $('#mrow');
+mrow.addEventListener('pointerdown', e => {
+  if (e.target.closest('button')) return;
+  drag = [e.clientX - mon.offsetLeft, e.clientY - mon.offsetTop];
+  mrow.setPointerCapture(e.pointerId);
+  mon.classList.add('drag');
+});
+mrow.addEventListener('pointermove', e => {
+  if (drag) place(e.clientX - drag[0], e.clientY - drag[1]);
+});
+const endDrag = () => {
+  if (!drag) return;
+  drag = null;
+  mon.classList.remove('drag');
+};
+mrow.addEventListener('pointerup', endDrag);
+mrow.addEventListener('pointercancel', endDrag);
+
+const mode = m => {
+  mon.classList.toggle('mini', m === 'mini');
+  mon.classList.toggle('big', m === 'big');
+};
+const toggleSys = () => {
+  sysOpen = !sysOpen;
+  mon.classList.toggle('hide', !sysOpen);
+  if (sysOpen) place(innerWidth - mon.offsetWidth - 24, 84);
+};
+mkWC($('#mwc'), [
+  () => mode(mon.classList.contains('mini') ? '' : 'mini'),
+  () => mode(mon.classList.contains('big') ? '' : 'big'),
+  () => { sysOpen = false; mon.classList.add('hide'); }
+], 12);
+$('#sysT').onclick = toggleSys;
+$('#toggleFloatBtn').onclick = toggleSys;
+$('#monModeBtn').onclick = () => mode(mon.classList.contains('big') ? '' : 'big');
+
+/* =========================================================================
+   7. FALLBACK WHEN LIQUIDGLASS.DEV CANNOT LOAD
+   ========================================================================= */
+function fallback() {
+  document.documentElement.classList.add('lg-off');
+  document.querySelectorAll('lg-button').forEach(b => {
+    b.tabIndex = 0;
+    b.setAttribute('role', 'button');
+    b.onkeydown = e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); b.click(); }
+    };
+  });
+  document.querySelectorAll('lg-segmented').forEach(s => {
+    const bs = [...s.querySelectorAll('button')];
+    s.onclick = e => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      bs.forEach(x => x.setAttribute('aria-checked', x === b));
+      s.dispatchEvent(new CustomEvent('change', { bubbles: true, detail: { value: b.value } }));
+    };
+  });
+  document.querySelectorAll('lg-switch').forEach(s => {
+    if (s.querySelector('.fsw')) return;
+    const c = s.hasAttribute('checked');
+    s.innerHTML = `<label class="fsw"><span>${s.textContent}</span><input type="checkbox" role="switch"></label>`;
+    s.querySelector('input').checked = c;
+  });
+}
+Promise.race([
+  customElements.whenDefined('lg-panel').then(() => 1),
+  new Promise(r => setTimeout(() => r(0), 2200))
+]).then(ok => { if (!ok) fallback(); });
+
+renderMain();
+</script>
+</body>
+</html>

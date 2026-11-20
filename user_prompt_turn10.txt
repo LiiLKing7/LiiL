@@ -1,0 +1,12 @@
+Created At: 2026-11-15T01:37:14+05:00
+Completed At: 2026-11-15T01:37:15+05:00
+Created At: 2026-11-15T01:37:14+05:00
+Completed At: 2026-11-15T01:37:15+05:00
+Command exited with code 0.
+
+Command output:
+has mkAscii: true
+has Grainient: false
+has Expand Card / db-expand: false
+has mGooRoot: true
+has plExpandList: false
